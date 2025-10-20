@@ -138,7 +138,7 @@ bool fs_write_test_file(void) {
 
     time_t now = time(NULL);
     fprintf(f, "Test write at %s", ctime(&now));
-    fprintf(f, "Timestamp: %ld\n", now);
+    fprintf(f, "Timestamp: %lld\n", (long long)now);
 
     int ret = fclose(f);
     fs_unlock();

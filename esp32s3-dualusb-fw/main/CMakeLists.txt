@@ -4,4 +4,5 @@
     "usb_host.c"
     "filesystem.c"
     "led_control.c"
-INCLUDE_DIRS ".")
+INCLUDE_DIRS "."
+REQUIRES esp_tinyusb)

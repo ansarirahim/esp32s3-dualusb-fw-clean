@@ -6,10 +6,14 @@
  * Date: 2025-10-20
  */
 
-#pragma once
+#ifndef FILESYSTEM_H
+#define FILESYSTEM_H
 
 #include <stdbool.h>
 #include <stdint.h>
+
+/* Mount point for internal FATFS volume */
+#define MOUNT_POINT "/storage"
 
 /**
  * @brief Initialize internal FATFS volume
@@ -32,12 +36,9 @@ bool fs_exists(const char *path);
 /**
  * @brief Write test file to filesystem
  *
- * @param path File path
- * @param data Data to write
- * @param size Data size in bytes
  * @return true if successful, false otherwise
  */
-bool fs_write_test_file(const char *path, const uint8_t *data, uint32_t size);
+bool fs_write_test_file(void);
 
 /**
  * @brief Get filesystem statistics
@@ -46,7 +47,7 @@ bool fs_write_test_file(const char *path, const uint8_t *data, uint32_t size);
  * @param free_bytes Pointer to store free size
  * @return true if successful, false otherwise
  */
-bool fs_get_stats(uint32_t *total_bytes, uint32_t *free_bytes);
+bool fs_get_stats(uint64_t *total_bytes, uint64_t *free_bytes);
 
 /**
  * @brief Unmount filesystem
