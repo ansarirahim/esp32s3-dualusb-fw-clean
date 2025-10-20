@@ -1,5 +1,9 @@
 ﻿# ESP32-S3 Dual USB Firmware
 
+**Author**: A.R. Ansari <ansarirahim1@gmail.com>
+**Date**: 2025-10-20
+**Project**: ESP32-S3 Dual USB Firmware for Michael Steinmann
+
 Firmware for ESP32-S3 supporting USB Mass Storage (Device) mode using ESP-IDF and TinyUSB.
 
 **Milestone 1**: Device Mode (MSC) with internal FATFS volume.

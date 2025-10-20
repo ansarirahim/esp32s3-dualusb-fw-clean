@@ -1,64 +1,65 @@
-#pragma once
-
-/**
+/*
  * @file filesystem.h
  * @brief Internal FATFS filesystem interface
+ *
+ * Author: A.R. Ansari <ansarirahim1@gmail.com>
+ * Date: 2025-10-20
  */
 
-#include <stdbool.h>
+#pragma once
 
-#define MOUNT_POINT "/storage"
+#include <stdbool.h>
+#include <stdint.h>
 
 /**
- * @brief Initialize and mount internal FATFS
- * 
- * Mounts FATFS from SPI flash at /storage.
- * If mount fails, formats the partition and retries.
+ * @brief Initialize internal FATFS volume
+ *
+ * Mounts SPI flash at /storage with automatic format on first boot.
  * Creates README.txt on first boot.
- * 
+ *
  * @return true if successful, false otherwise
  */
 bool fs_init_internal(void);
 
 /**
- * @brief Check if a file exists
- * 
+ * @brief Check if file exists
+ *
  * @param path File path (e.g., "/storage/test.txt")
- * @return true if file exists, false otherwise
+ * @return true if exists, false otherwise
  */
 bool fs_exists(const char *path);
 
 /**
- * @brief Write a test file to verify filesystem
- * 
- * Creates /storage/test_write.txt with timestamp.
- * 
+ * @brief Write test file to filesystem
+ *
+ * @param path File path
+ * @param data Data to write
+ * @param size Data size in bytes
  * @return true if successful, false otherwise
  */
-bool fs_write_test_file(void);
+bool fs_write_test_file(const char *path, const uint8_t *data, uint32_t size);
 
 /**
  * @brief Get filesystem statistics
- * 
- * @param total_bytes Pointer to store total size (bytes)
- * @param free_bytes Pointer to store free space (bytes)
+ *
+ * @param total_bytes Pointer to store total size
+ * @param free_bytes Pointer to store free size
  * @return true if successful, false otherwise
  */
-bool fs_get_stats(uint64_t *total_bytes, uint64_t *free_bytes);
+bool fs_get_stats(uint32_t *total_bytes, uint32_t *free_bytes);
 
 /**
- * @brief Unmount filesystem (for safe eject)
- * 
+ * @brief Unmount filesystem
+ *
  * @return true if successful, false otherwise
  */
 bool fs_unmount(void);
 
 /**
  * @brief Remount filesystem
- * 
+ *
  * @return true if successful, false otherwise
  */
 bool fs_remount(void);
 
 #endif /* FILESYSTEM_H */
-

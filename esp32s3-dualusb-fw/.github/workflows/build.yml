@@ -1,0 +1,57 @@
+name: Build & Test
+
+on:
+  push:
+    branches: [ master, develop, "feat/*" ]
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Set up ESP-IDF
+      uses: espressif/esp-idf-ci-action@v1
+      with:
+        esp_idf_version: v5.0
+        target: esp32s3
+        
+    - name: Build firmware
+      run: |
+        cd esp32s3-dualusb-fw
+        idf.py set-target esp32s3
+        idf.py build
+        
+    - name: Check build artifacts
+      run: |
+        cd esp32s3-dualusb-fw
+        if [ ! -f build/esp32s3-dualusb-fw.bin ]; then
+          echo "ERROR: Build artifact not found!"
+          exit 1
+        fi
+        echo "Build successful! Artifact size: $(stat -f%z build/esp32s3-dualusb-fw.bin 2>/dev/null || stat -c%s build/esp32s3-dualusb-fw.bin) bytes"
+        
+    - name: Run static analysis
+      run: |
+        cd esp32s3-dualusb-fw
+        # Check for common issues
+        grep -r "TODO\|FIXME\|HACK" main/ || true
+        
+    - name: Upload build artifacts
+      if: success()
+      uses: actions/upload-artifact@v3
+      with:
+        name: firmware-build
+        path: esp32s3-dualusb-fw/build/esp32s3-dualusb-fw.bin
+        retention-days: 30
+        
+    - name: Notify on failure
+      if: failure()
+      run: |
+        echo "Build failed! Check logs above for details."
+        exit 1
+

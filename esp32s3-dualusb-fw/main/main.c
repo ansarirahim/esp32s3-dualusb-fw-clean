@@ -1,4 +1,14 @@
-﻿#include "freertos/FreeRTOS.h"
+﻿/*
+ * @file main.c
+ * @brief ESP32-S3 Dual USB Firmware - Main Application
+ *
+ * Author: A.R. Ansari <ansarirahim1@gmail.com>
+ * Date: 2025-10-20
+ *
+ * Milestone 1: USB Device Mode (MSC) with internal FATFS
+ */
+
+#include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_log.h"
 #include "led_control.h"

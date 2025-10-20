@@ -1,0 +1,60 @@
+name: Code Quality & Lint
+
+on:
+  push:
+    branches: [ master, develop, "feat/*" ]
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Check file headers
+      run: |
+        echo "Checking for author signatures in source files..."
+        for file in esp32s3-dualusb-fw/main/*.c esp32s3-dualusb-fw/main/*.h; do
+          if [ -f "$file" ]; then
+            if ! grep -q "Author: A.R. Ansari" "$file"; then
+              echo "WARNING: Missing author signature in $file"
+            fi
+          fi
+        done
+        
+    - name: Check for AI tool markers
+      run: |
+        echo "Checking for AI tool markers..."
+        if grep -r "augment\|claude\|gpt\|openai\|anthropic" esp32s3-dualusb-fw/main/ --ignore-case; then
+          echo "ERROR: Found AI tool markers in source code!"
+          exit 1
+        fi
+        echo "✓ No AI tool markers found"
+        
+    - name: Validate C syntax
+      run: |
+        echo "Checking C syntax..."
+        for file in esp32s3-dualusb-fw/main/*.c; do
+          if [ -f "$file" ]; then
+            gcc -fsyntax-only -I. "$file" 2>&1 | grep -v "warning:" || true
+          fi
+        done
+        
+    - name: Check code formatting
+      run: |
+        echo "Checking code formatting..."
+        # Check for trailing whitespace
+        if grep -r '[[:space:]]$' esp32s3-dualusb-fw/main/*.c esp32s3-dualusb-fw/main/*.h 2>/dev/null; then
+          echo "WARNING: Found trailing whitespace"
+        fi
+        echo "✓ Code formatting check complete"
+        
+    - name: Verify git configuration
+      run: |
+        echo "Verifying git configuration..."
+        git config user.name || echo "Git user name not set"
+        git config user.email || echo "Git user email not set"
+

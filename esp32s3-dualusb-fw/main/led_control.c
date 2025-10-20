@@ -1,4 +1,17 @@
-﻿#include "led_control.h"
+﻿/*
+ * @file led_control.c
+ * @brief LED control implementation for ESP32-S3 Dual USB Firmware
+ *
+ * Author: A.R. Ansari <ansarirahim1@gmail.com>
+ * Date: 2025-10-20
+ *
+ * Implements LED blink patterns for device status indication:
+ * - Idle: Slow blink (500ms ON / 1500ms OFF)
+ * - Busy: Fast blink (200ms ON / 200ms OFF)
+ * - Error: Solid 3s then slow blink
+ */
+
+#include "led_control.h"
 #include "board_pins.h"
 #include "driver/gpio.h"
 #include "freertos/FreeRTOS.h"

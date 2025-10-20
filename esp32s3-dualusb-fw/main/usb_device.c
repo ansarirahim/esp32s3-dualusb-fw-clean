@@ -1,4 +1,19 @@
-﻿#include "usb_device.h"
+﻿/*
+ * @file usb_device.c
+ * @brief USB Device Mode (MSC) implementation for ESP32-S3
+ *
+ * Author: A.R. Ansari <ansarirahim1@gmail.com>
+ * Date: 2025-10-20
+ *
+ * Implements TinyUSB MSC device stack with:
+ * - Block device backed by internal FATFS
+ * - Sector-level read/write operations
+ * - SCSI START/STOP UNIT handling for safe eject
+ * - I/O activity monitoring and LED state updates
+ * - Write synchronization for data safety
+ */
+
+#include "usb_device.h"
 #include "filesystem.h"
 #include "led_control.h"
 #include "esp_log.h"

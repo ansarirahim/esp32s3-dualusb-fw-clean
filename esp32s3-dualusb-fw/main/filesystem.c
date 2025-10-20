@@ -1,4 +1,18 @@
-﻿#include "filesystem.h"
+﻿/*
+ * @file filesystem.c
+ * @brief Internal FATFS filesystem implementation for ESP32-S3
+ *
+ * Author: A.R. Ansari <ansarirahim1@gmail.com>
+ * Date: 2025-10-20
+ *
+ * Implements SPI flash FATFS mount with:
+ * - Automatic format on first boot
+ * - Mutex-protected concurrent access
+ * - Write synchronization for data safety
+ * - README.txt creation on first boot
+ */
+
+#include "filesystem.h"
 #include "esp_log.h"
 #include "esp_vfs_fat.h"
 #include "wear_levelling.h"
