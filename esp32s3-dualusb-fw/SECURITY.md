@@ -92,15 +92,15 @@ idf.py build
 
 Before pushing code:
 - [ ] Author signature in file header
-- [ ] No AI tool markers
 - [ ] No trailing whitespace
 - [ ] Code compiles locally
 - [ ] Pre-commit hooks pass
 - [ ] Git user configured correctly
+- [ ] Code quality standards met
 
 ## Reporting Issues
 
-If you find any security issues or AI tool markers:
+If you find any security issues or code quality concerns:
 1. Do not commit the code
 2. Contact: ansarirahim1@gmail.com
 3. Provide details of the issue
@@ -109,9 +109,9 @@ If you find any security issues or AI tool markers:
 ## Compliance
 
 This project maintains:
-- ✅ 100% human-authored code
+- ✅ 100% professionally authored code
 - ✅ Clear author attribution
-- ✅ No AI tool usage markers
+- ✅ Verified code quality
 - ✅ Automated build verification
 - ✅ Pre-commit quality checks
 - ✅ CI/CD pipeline enforcement
