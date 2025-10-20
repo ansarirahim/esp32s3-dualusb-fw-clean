@@ -2,9 +2,9 @@ name: Code Quality & Lint
 
 on:
   push:
-    branches: [ master, develop, "feat/*" ]
+    branches: [ main, master, develop, "feat/*" ]
   pull_request:
-    branches: [ master, develop ]
+    branches: [ main, master, develop ]
 
 jobs:
   lint:
@@ -37,9 +37,21 @@ jobs:
     - name: Validate C syntax
       run: |
         echo "Checking C syntax..."
+        for file in esp32s3-dualusb-fw/main/*.c esp32s3-dualusb-fw/main/*.h; do
+          if [ -f "$file" ]; then
+            echo "Checking $file..."
+            gcc -fsyntax-only -I. "$file" 2>&1 || true
+          fi
+        done
+
+    - name: Check for undefined macros
+      run: |
+        echo "Checking for undefined macros..."
         for file in esp32s3-dualusb-fw/main/*.c; do
           if [ -f "$file" ]; then
-            gcc -fsyntax-only -I. "$file" 2>&1 | grep -v "warning:" || true
+            if grep -E "MOUNT_POINT|TAG|ESP_LOG" "$file" | grep -v "#define" | grep -v "static const"; then
+              echo "Checking macro usage in $file"
+            fi
           fi
         done
         

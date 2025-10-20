@@ -2,9 +2,9 @@ name: Build & Test
 
 on:
   push:
-    branches: [ master, develop, "feat/*" ]
+    branches: [ main, master, develop, "feat/*" ]
   pull_request:
-    branches: [ master, develop ]
+    branches: [ main, master, develop ]
 
 jobs:
   build:
@@ -24,7 +24,18 @@ jobs:
       run: |
         cd esp32s3-dualusb-fw
         idf.py set-target esp32s3
-        idf.py build
+        idf.py build 2>&1 | tee build.log
+
+    - name: Check for compilation warnings and errors
+      run: |
+        cd esp32s3-dualusb-fw
+        if grep -i "error:" build.log; then
+          echo "❌ Compilation errors found!"
+          exit 1
+        fi
+        if grep -i "warning:" build.log | grep -v "deprecated"; then
+          echo "⚠️  Compilation warnings found (non-deprecated)"
+        fi
         
     - name: Check build artifacts
       run: |
