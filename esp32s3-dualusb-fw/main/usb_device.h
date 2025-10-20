@@ -41,5 +41,3 @@ bool usb_device_is_mounted(void);
  */
 void usb_device_notify_io_start(void);
 void usb_device_notify_io_end(void);
-
-#endif /* USB_DEVICE_H */

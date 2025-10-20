@@ -34,5 +34,3 @@ void led_set_state(led_state_t state);
  * @return Current LED state
  */
 led_state_t led_get_state(void);
-
-#endif /* LED_CONTROL_H */

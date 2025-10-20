@@ -20,5 +20,3 @@
 
 /* Boot/Mode Selection */
 #define PIN_BOOT1         0    /* GPIO0 - BOOT1 (read-only in M1, for future mode select) */
-
-#endif /* BOARD_PINS_H */
