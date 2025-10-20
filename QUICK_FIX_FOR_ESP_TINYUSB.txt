@@ -1,0 +1,138 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    QUICK FIX: esp_tinyusb.h Not Found
+═══════════════════════════════════════════════════════════════════════════════
+
+ERROR:
+  fatal error: esp_tinyusb.h: No such file or directory
+
+CAUSE:
+  The esp_tinyusb component is not installed in your project.
+
+═══════════════════════════════════════════════════════════════════════════════
+                              QUICK SOLUTION
+═══════════════════════════════════════════════════════════════════════════════
+
+STEP 1: Navigate to project directory
+  cd /mnt/d/github/esp32s3-dualusb-fw/esp32s3-dualusb-fw
+
+STEP 2: Add the esp_tinyusb dependency
+  idf.py add-dependency espressif/esp_tinyusb
+
+STEP 3: Reconfigure the build
+  idf.py reconfigure
+
+STEP 4: Clean build
+  idf.py fullclean
+  idf.py build
+
+STEP 5: Flash to device
+  idf.py -p /dev/ttyUSB0 flash
+
+═══════════════════════════════════════════════════════════════════════════════
+                         WHAT THESE COMMANDS DO
+═══════════════════════════════════════════════════════════════════════════════
+
+idf.py add-dependency espressif/esp_tinyusb
+  → Downloads the esp_tinyusb component from GitHub
+  → Creates managed_components directory
+  → Registers component with CMake
+
+idf.py reconfigure
+  → Updates CMake configuration
+  → Includes new component in build system
+
+idf.py fullclean
+  → Removes old build files
+  → Ensures clean rebuild
+
+idf.py build
+  → Compiles with esp_tinyusb available
+  → Should now find esp_tinyusb.h
+
+idf.py -p /dev/ttyUSB0 flash
+  → Flashes compiled firmware to ESP32-S3
+
+═══════════════════════════════════════════════════════════════════════════════
+                            ALTERNATIVE METHOD
+═══════════════════════════════════════════════════════════════════════════════
+
+If idf.py add-dependency doesn't work, try manual installation:
+
+1. Create managed_components directory:
+   mkdir -p managed_components
+
+2. Clone esp_tinyusb:
+   cd managed_components
+   git clone https://github.com/espressif/esp_tinyusb.git espressif__esp_tinyusb
+   cd ..
+
+3. Rebuild:
+   idf.py fullclean
+   idf.py build
+
+═══════════════════════════════════════════════════════════════════════════════
+                              VERIFICATION
+═══════════════════════════════════════════════════════════════════════════════
+
+After running the commands, verify the component is installed:
+
+  ls managed_components/espressif__esp_tinyusb/
+
+You should see:
+  ✅ esp_tinyusb/
+  ✅ idf_component.yml
+  ✅ README.md
+  ✅ etc.
+
+═══════════════════════════════════════════════════════════════════════════════
+                            TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════════════════════
+
+Problem: "idf.py: command not found"
+Solution: Activate ESP-IDF environment:
+  source ~/esp/esp-idf/export.sh
+
+Problem: Build still fails
+Solution: Try complete clean rebuild:
+  idf.py fullclean
+  rm -rf build managed_components dependencies.lock
+  idf.py add-dependency espressif/esp_tinyusb
+  idf.py build
+
+Problem: Component download fails
+Solution: Check internet connection and try manual method
+
+═══════════════════════════════════════════════════════════════════════════════
+                              FILES CREATED
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ idf_component.yml
+   → Component dependency configuration file
+   → Already created in project root
+   → Specifies esp_tinyusb as a dependency
+
+✅ main/CMakeLists.txt
+   → Already has "REQUIRES esp_tinyusb"
+   → No changes needed
+
+✅ main/usb_device.c
+   → Already includes "esp_tinyusb.h"
+   → No changes needed
+
+═══════════════════════════════════════════════════════════════════════════════
+                            EXPECTED RESULT
+═══════════════════════════════════════════════════════════════════════════════
+
+After following these steps:
+
+✅ esp_tinyusb component will be downloaded
+✅ esp_tinyusb.h will be found
+✅ Build will succeed
+✅ Firmware will be ready to flash
+
+═══════════════════════════════════════════════════════════════════════════════
+
+For detailed information, see: ESP_TINYUSB_INSTALLATION_GUIDE.md
+
+═══════════════════════════════════════════════════════════════════════════════
+

@@ -1,0 +1,12 @@
+## IDF Component Manager Configuration
+## This file defines the dependencies for the ESP32-S3 Dual USB Firmware project
+
+version: "1.0"
+description: "ESP32-S3 Dual USB Firmware with MSC (Mass Storage Class) support"
+url: "https://github.com/ansarirahim/esp32s3-dualusb-fw"
+
+dependencies:
+  espressif/esp_tinyusb:
+    version: "^1.4.0"
+    git: "https://github.com/espressif/esp_tinyusb.git"
+
