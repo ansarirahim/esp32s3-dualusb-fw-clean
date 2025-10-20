@@ -9,60 +9,112 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-      
+      with:
+        fetch-depth: 0
+
     - name: Set up ESP-IDF
       uses: espressif/esp-idf-ci-action@v1
       with:
-        esp_idf_version: v5.0
+        esp_idf_version: v5.4.1
         target: esp32s3
-        
+
     - name: Build firmware
       run: |
         cd esp32s3-dualusb-fw
         idf.py set-target esp32s3
+        idf.py fullclean
         idf.py build 2>&1 | tee build.log
+        echo "BUILD_STATUS=SUCCESS" >> $GITHUB_ENV
 
-    - name: Check for compilation warnings and errors
+    - name: Check for compilation errors
+      if: always()
       run: |
         cd esp32s3-dualusb-fw
         if grep -i "error:" build.log; then
+          echo "BUILD_STATUS=FAILED" >> $GITHUB_ENV
           echo "❌ Compilation errors found!"
           exit 1
         fi
-        if grep -i "warning:" build.log | grep -v "deprecated"; then
-          echo "⚠️  Compilation warnings found (non-deprecated)"
-        fi
-        
+
     - name: Check build artifacts
+      if: success()
       run: |
         cd esp32s3-dualusb-fw
         if [ ! -f build/esp32s3-dualusb-fw.bin ]; then
           echo "ERROR: Build artifact not found!"
           exit 1
         fi
-        echo "Build successful! Artifact size: $(stat -f%z build/esp32s3-dualusb-fw.bin 2>/dev/null || stat -c%s build/esp32s3-dualusb-fw.bin) bytes"
-        
-    - name: Run static analysis
-      run: |
-        cd esp32s3-dualusb-fw
-        # Check for common issues
-        grep -r "TODO\|FIXME\|HACK" main/ || true
-        
-    - name: Upload build artifacts
+        ARTIFACT_SIZE=$(stat -c%s build/esp32s3-dualusb-fw.bin)
+        echo "Build successful! Artifact size: $ARTIFACT_SIZE bytes"
+        echo "ARTIFACT_SIZE=$ARTIFACT_SIZE" >> $GITHUB_ENV
+
+    - name: Archive build logs
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-logs
+        path: esp32s3-dualusb-fw/build.log
+        retention-days: 90
+
+    - name: Upload firmware binary
       if: success()
       uses: actions/upload-artifact@v3
       with:
-        name: firmware-build
+        name: firmware-binary
         path: esp32s3-dualusb-fw/build/esp32s3-dualusb-fw.bin
-        retention-days: 30
-        
-    - name: Notify on failure
+        retention-days: 90
+
+    - name: Create build report
+      if: always()
+      run: |
+        cd esp32s3-dualusb-fw
+        cat > BUILD_REPORT.txt << 'EOF'
+        BUILD REPORT
+        ============
+        Date: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+        Commit: ${{ github.sha }}
+        Branch: ${{ github.ref }}
+        Status: ${{ env.BUILD_STATUS }}
+        Artifact Size: ${{ env.ARTIFACT_SIZE }} bytes
+
+        Build Log:
+        EOF
+        cat build.log >> BUILD_REPORT.txt
+
+    - name: Upload build report
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-report
+        path: esp32s3-dualusb-fw/BUILD_REPORT.txt
+        retention-days: 90
+
+    - name: Commit build artifacts on success
+      if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+      run: |
+        cd esp32s3-dualusb-fw
+        git config user.name "Build System"
+        git config user.email "build@system.local"
+        git add build/esp32s3-dualusb-fw.bin build.log BUILD_REPORT.txt 2>/dev/null || true
+        git commit -m "build: Successful build - $(date -u +%Y-%m-%d\ %H:%M:%S\ UTC)" || true
+        git push origin main || true
+
+    - name: Notify success
+      if: success()
+      run: |
+        echo "✅ BUILD SUCCESSFUL"
+        echo "Commit: ${{ github.sha }}"
+        echo "Branch: ${{ github.ref }}"
+        echo "Artifact: firmware-binary"
+
+    - name: Notify failure
       if: failure()
       run: |
-        echo "Build failed! Check logs above for details."
+        echo "❌ BUILD FAILED"
+        echo "Check build logs for details"
         exit 1
 
