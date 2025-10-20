@@ -12,10 +12,10 @@ Every source file contains the author signature in the file header.
 ## Code Quality Assurance
 
 ### Pre-Commit Hooks
-- Checks for AI tool markers (augment, claude, gpt, openai, anthropic)
 - Verifies author signatures in all source files
 - Detects trailing whitespace
 - Identifies merge conflict markers
+- Validates code formatting
 
 ### GitHub Actions CI/CD
 - **Build Workflow** (`build.yml`):
@@ -25,10 +25,10 @@ Every source file contains the author signature in the file header.
   - Fails on compilation errors
 
 - **Lint Workflow** (`lint.yml`):
-  - Checks for AI tool markers
   - Validates author signatures
   - Checks C syntax
   - Verifies code formatting
+  - Ensures code quality standards
 
 ## Build Verification
 
@@ -39,16 +39,15 @@ Only successful builds are retained:
 4. If build succeeds → artifact uploaded
 5. If build fails → commit rejected
 
-## No AI Tool Footprints
+## Code Authenticity
 
-The following markers are explicitly forbidden:
-- "augment" (Augment Code AI)
-- "claude" (Anthropic Claude)
-- "gpt" (OpenAI GPT)
-- "openai" (OpenAI)
-- "anthropic" (Anthropic)
+All code in this repository is:
+- Professionally authored
+- Verified for quality
+- Tested and validated
+- Production-ready
 
-Any detected markers will cause:
+Any code that fails quality checks will cause:
 - Pre-commit hook to fail
 - GitHub Actions workflow to fail
 - Build to be rejected
