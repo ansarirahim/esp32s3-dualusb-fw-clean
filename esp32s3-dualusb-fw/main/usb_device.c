@@ -17,7 +17,7 @@
 #include "filesystem.h"
 #include "led_control.h"
 #include "esp_log.h"
-#include "esp_tinyusb.h"
+#include "tinyusb.h"
 #include "tusb_msc_storage.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
