@@ -17,7 +17,7 @@
 #include "filesystem.h"
 #include "led_control.h"
 #include "esp_log.h"
-#include "tinyusb.h"
+#include "esp_tinyusb.h"
 #include "tusb_msc_storage.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -203,10 +203,7 @@ bool usb_device_init(void) {
 
     /* Initialize TinyUSB */
     const tinyusb_config_t tusb_cfg = {
-        .device_descriptor = NULL,
-        .string_descriptor = NULL,
         .external_phy = false,
-        .configuration_descriptor = NULL,
     };
 
     esp_err_t ret = tinyusb_driver_install(&tusb_cfg);
@@ -216,13 +213,19 @@ bool usb_device_init(void) {
     }
 
     /* Register MSC callbacks */
-    tusb_msc_storage_init_spiflash(
-        MOUNT_POINT,
-        msc_capacity_cb,
-        msc_start_stop_cb,
-        msc_read_sectors,
-        msc_write_sectors
-    );
+    const tusb_msc_storage_init_t msc_cfg = {
+        .mount_point = MOUNT_POINT,
+        .capacity_cb = msc_capacity_cb,
+        .start_stop_cb = msc_start_stop_cb,
+        .read_sectors_cb = msc_read_sectors,
+        .write_sectors_cb = msc_write_sectors,
+    };
+
+    ret = tusb_msc_storage_init(&msc_cfg);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to initialize MSC storage: %s", esp_err_to_name(ret));
+        return false;
+    }
 
     g_usb_connected = true;
     ESP_LOGI(TAG, "USB Device (MSC) initialized");
