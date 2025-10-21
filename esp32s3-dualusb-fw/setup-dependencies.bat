@@ -10,8 +10,38 @@ echo ║                                                                ║
 echo ╚════════════════════════════════════════════════════════════════╝
 echo.
 
-REM Step 0: Set target to esp32s3
-echo Step 0: Setting build target to esp32s3...
+REM Step 0: Delete corrupted build directory
+echo Step 0: Cleaning corrupted build directory...
+if exist build (
+    rmdir /s /q build
+    echo ✅ Build directory deleted
+) else (
+    echo ✅ No build directory to clean
+)
+
+REM Step 1: Delete managed_components
+echo.
+echo Step 1: Cleaning managed_components...
+if exist managed_components (
+    rmdir /s /q managed_components
+    echo ✅ managed_components deleted
+) else (
+    echo ✅ No managed_components to clean
+)
+
+REM Step 2: Delete dependencies.lock
+echo.
+echo Step 2: Cleaning dependencies.lock...
+if exist dependencies.lock (
+    del dependencies.lock
+    echo ✅ dependencies.lock deleted
+) else (
+    echo ✅ No dependencies.lock to clean
+)
+
+REM Step 3: Set target to esp32s3
+echo.
+echo Step 3: Setting build target to esp32s3...
 idf.py set-target esp32s3
 if errorlevel 1 (
     echo ❌ Failed to set target
@@ -19,18 +49,9 @@ if errorlevel 1 (
 )
 echo ✅ Target set to esp32s3
 
-REM Step 1: Add dependency
-echo Step 1: Adding esp_tinyusb dependency...
-python -m idf add-dependency espressif/esp_tinyusb
-if errorlevel 1 (
-    echo ❌ Failed to add dependency
-    exit /b 1
-)
-echo ✅ Dependency added
-
-REM Step 2: Reconfigure
+REM Step 4: Reconfigure
 echo.
-echo Step 2: Reconfiguring build system...
+echo Step 4: Reconfiguring build system...
 idf.py reconfigure
 if errorlevel 1 (
     echo ❌ Failed to reconfigure
@@ -38,19 +59,9 @@ if errorlevel 1 (
 )
 echo ✅ Build system reconfigured
 
-REM Step 3: Clean build
+REM Step 5: Build
 echo.
-echo Step 3: Cleaning build artifacts...
-idf.py fullclean
-if errorlevel 1 (
-    echo ❌ Failed to clean
-    exit /b 1
-)
-echo ✅ Build cleaned
-
-REM Step 4: Build
-echo.
-echo Step 4: Building firmware...
+echo Step 5: Building firmware...
 idf.py build
 if errorlevel 1 (
     echo ❌ Build failed

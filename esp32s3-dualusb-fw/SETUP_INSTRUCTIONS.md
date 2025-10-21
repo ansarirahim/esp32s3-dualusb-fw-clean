@@ -19,15 +19,17 @@ chmod +x setup-dependencies.sh
 
 ## Manual Setup (If Script Doesn't Work)
 
-### Step 0: Set Target (IMPORTANT!)
+### Step 0: Clean Everything (CRITICAL!)
 ```bash
 cd esp32s3-dualusb-fw
-idf.py set-target esp32s3
+rmdir /s /q build
+rmdir /s /q managed_components
+del dependencies.lock
 ```
 
-### Step 1: Add Dependency
+### Step 1: Set Target (IMPORTANT!)
 ```bash
-idf.py add-dependency espressif/esp_tinyusb
+idf.py set-target esp32s3
 ```
 
 ### Step 2: Reconfigure
@@ -35,17 +37,12 @@ idf.py add-dependency espressif/esp_tinyusb
 idf.py reconfigure
 ```
 
-### Step 3: Clean Build
-```bash
-idf.py fullclean
-```
-
-### Step 4: Build
+### Step 3: Build
 ```bash
 idf.py build
 ```
 
-### Step 5: Flash (Optional)
+### Step 4: Flash (Optional)
 ```bash
 idf.py -p COM3 flash
 ```
@@ -56,10 +53,11 @@ idf.py -p COM3 flash
 
 | Command | Purpose |
 |---------|---------|
+| `rmdir /s /q build` | Deletes corrupted build directory |
+| `rmdir /s /q managed_components` | Deletes old component cache |
+| `del dependencies.lock` | Deletes old dependency lock file |
 | `idf.py set-target esp32s3` | Sets the build target to ESP32-S3 (CRITICAL!) |
-| `idf.py add-dependency espressif/esp_tinyusb` | Downloads and registers the esp_tinyusb component |
-| `idf.py reconfigure` | Updates CMake configuration with the new component |
-| `idf.py fullclean` | Removes old build artifacts |
+| `idf.py reconfigure` | Updates CMake configuration with the new target |
 | `idf.py build` | Compiles the firmware |
 | `idf.py -p COM3 flash` | Flashes firmware to device (replace COM3 with your port) |
 

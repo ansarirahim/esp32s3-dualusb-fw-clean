@@ -12,8 +12,38 @@ echo "║                                                                ║"
 echo "╚════════════════════════════════════════════════════════════════╝"
 echo ""
 
-# Step 0: Set target to esp32s3
-echo "Step 0: Setting build target to esp32s3..."
+# Step 0: Delete corrupted build directory
+echo "Step 0: Cleaning corrupted build directory..."
+if [ -d build ]; then
+    rm -rf build
+    echo "✅ Build directory deleted"
+else
+    echo "✅ No build directory to clean"
+fi
+
+# Step 1: Delete managed_components
+echo ""
+echo "Step 1: Cleaning managed_components..."
+if [ -d managed_components ]; then
+    rm -rf managed_components
+    echo "✅ managed_components deleted"
+else
+    echo "✅ No managed_components to clean"
+fi
+
+# Step 2: Delete dependencies.lock
+echo ""
+echo "Step 2: Cleaning dependencies.lock..."
+if [ -f dependencies.lock ]; then
+    rm dependencies.lock
+    echo "✅ dependencies.lock deleted"
+else
+    echo "✅ No dependencies.lock to clean"
+fi
+
+# Step 3: Set target to esp32s3
+echo ""
+echo "Step 3: Setting build target to esp32s3..."
 idf.py set-target esp32s3
 if [ $? -ne 0 ]; then
     echo "❌ Failed to set target"
@@ -21,18 +51,9 @@ if [ $? -ne 0 ]; then
 fi
 echo "✅ Target set to esp32s3"
 
-# Step 1: Add dependency
-echo "Step 1: Adding esp_tinyusb dependency..."
-idf.py add-dependency espressif/esp_tinyusb
-if [ $? -ne 0 ]; then
-    echo "❌ Failed to add dependency"
-    exit 1
-fi
-echo "✅ Dependency added"
-
-# Step 2: Reconfigure
+# Step 4: Reconfigure
 echo ""
-echo "Step 2: Reconfiguring build system..."
+echo "Step 4: Reconfiguring build system..."
 idf.py reconfigure
 if [ $? -ne 0 ]; then
     echo "❌ Failed to reconfigure"
@@ -40,19 +61,9 @@ if [ $? -ne 0 ]; then
 fi
 echo "✅ Build system reconfigured"
 
-# Step 3: Clean build
+# Step 5: Build
 echo ""
-echo "Step 3: Cleaning build artifacts..."
-idf.py fullclean
-if [ $? -ne 0 ]; then
-    echo "❌ Failed to clean"
-    exit 1
-fi
-echo "✅ Build cleaned"
-
-# Step 4: Build
-echo ""
-echo "Step 4: Building firmware..."
+echo "Step 5: Building firmware..."
 idf.py build
 if [ $? -ne 0 ]; then
     echo "❌ Build failed"
