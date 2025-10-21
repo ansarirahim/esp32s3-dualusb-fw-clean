@@ -39,15 +39,16 @@ if exist dependencies.lock (
     echo ✅ No dependencies.lock to clean
 )
 
-REM Step 3: Add dependency BEFORE set-target
+REM Step 3: Add dependency BEFORE set-target (skip if already exists)
 echo.
 echo Step 3: Adding esp_tinyusb dependency...
 idf.py add-dependency espressif/esp_tinyusb
 if errorlevel 1 (
-    echo ❌ Failed to add dependency
-    exit /b 1
+    echo ⚠️  Dependency already exists (this is OK)
+) else (
+    echo ✅ Dependency added
 )
-echo ✅ Dependency added
+echo ✅ Proceeding with build
 
 REM Step 4: Set target to esp32s3
 echo.

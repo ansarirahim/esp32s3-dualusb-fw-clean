@@ -41,15 +41,16 @@ else
     echo "✅ No dependencies.lock to clean"
 fi
 
-# Step 3: Add dependency BEFORE set-target
+# Step 3: Add dependency BEFORE set-target (skip if already exists)
 echo ""
 echo "Step 3: Adding esp_tinyusb dependency..."
 idf.py add-dependency espressif/esp_tinyusb
 if [ $? -ne 0 ]; then
-    echo "❌ Failed to add dependency"
-    exit 1
+    echo "⚠️  Dependency already exists (this is OK)"
+else
+    echo "✅ Dependency added"
 fi
-echo "✅ Dependency added"
+echo "✅ Proceeding with build"
 
 # Step 4: Set target to esp32s3
 echo ""

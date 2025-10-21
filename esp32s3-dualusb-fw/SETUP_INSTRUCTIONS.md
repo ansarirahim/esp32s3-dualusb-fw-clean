@@ -30,6 +30,7 @@ del dependencies.lock
 ### Step 1: Add Dependency (MUST BE BEFORE set-target!)
 ```bash
 idf.py add-dependency espressif/esp_tinyusb
+# Note: If it says "already exists", that's OK - just continue
 ```
 
 ### Step 2: Set Target (IMPORTANT!)
