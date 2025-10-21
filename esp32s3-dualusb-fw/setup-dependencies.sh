@@ -41,25 +41,25 @@ else
     echo "✅ No dependencies.lock to clean"
 fi
 
-# Step 3: Set target to esp32s3
+# Step 3: Add dependency BEFORE set-target
 echo ""
-echo "Step 3: Setting build target to esp32s3..."
-idf.py set-target esp32s3
-if [ $? -ne 0 ]; then
-    echo "❌ Failed to set target"
-    exit 1
-fi
-echo "✅ Target set to esp32s3"
-
-# Step 4: Add dependency
-echo ""
-echo "Step 4: Adding esp_tinyusb dependency..."
+echo "Step 3: Adding esp_tinyusb dependency..."
 idf.py add-dependency espressif/esp_tinyusb
 if [ $? -ne 0 ]; then
     echo "❌ Failed to add dependency"
     exit 1
 fi
 echo "✅ Dependency added"
+
+# Step 4: Set target to esp32s3
+echo ""
+echo "Step 4: Setting build target to esp32s3..."
+idf.py set-target esp32s3
+if [ $? -ne 0 ]; then
+    echo "❌ Failed to set target"
+    exit 1
+fi
+echo "✅ Target set to esp32s3"
 
 # Step 5: Reconfigure
 echo ""

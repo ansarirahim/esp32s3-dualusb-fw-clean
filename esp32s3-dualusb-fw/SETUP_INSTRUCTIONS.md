@@ -27,14 +27,14 @@ rmdir /s /q managed_components
 del dependencies.lock
 ```
 
-### Step 1: Set Target (IMPORTANT!)
-```bash
-idf.py set-target esp32s3
-```
-
-### Step 2: Add Dependency
+### Step 1: Add Dependency (MUST BE BEFORE set-target!)
 ```bash
 idf.py add-dependency espressif/esp_tinyusb
+```
+
+### Step 2: Set Target (IMPORTANT!)
+```bash
+idf.py set-target esp32s3
 ```
 
 ### Step 3: Reconfigure
@@ -61,8 +61,8 @@ idf.py -p COM3 flash
 | `rmdir /s /q build` | Deletes corrupted build directory |
 | `rmdir /s /q managed_components` | Deletes old component cache |
 | `del dependencies.lock` | Deletes old dependency lock file |
+| `idf.py add-dependency espressif/esp_tinyusb` | Downloads esp_tinyusb component and creates dependencies.lock (MUST BE FIRST!) |
 | `idf.py set-target esp32s3` | Sets the build target to ESP32-S3 (CRITICAL!) |
-| `idf.py add-dependency espressif/esp_tinyusb` | Downloads esp_tinyusb component and creates dependencies.lock |
 | `idf.py reconfigure` | Updates CMake configuration with the new target and component |
 | `idf.py build` | Compiles the firmware |
 | `idf.py -p COM3 flash` | Flashes firmware to device (replace COM3 with your port) |

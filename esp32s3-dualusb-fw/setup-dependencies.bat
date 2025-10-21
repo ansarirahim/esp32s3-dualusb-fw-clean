@@ -39,25 +39,25 @@ if exist dependencies.lock (
     echo ✅ No dependencies.lock to clean
 )
 
-REM Step 3: Set target to esp32s3
+REM Step 3: Add dependency BEFORE set-target
 echo.
-echo Step 3: Setting build target to esp32s3...
-idf.py set-target esp32s3
-if errorlevel 1 (
-    echo ❌ Failed to set target
-    exit /b 1
-)
-echo ✅ Target set to esp32s3
-
-REM Step 4: Add dependency
-echo.
-echo Step 4: Adding esp_tinyusb dependency...
+echo Step 3: Adding esp_tinyusb dependency...
 idf.py add-dependency espressif/esp_tinyusb
 if errorlevel 1 (
     echo ❌ Failed to add dependency
     exit /b 1
 )
 echo ✅ Dependency added
+
+REM Step 4: Set target to esp32s3
+echo.
+echo Step 4: Setting build target to esp32s3...
+idf.py set-target esp32s3
+if errorlevel 1 (
+    echo ❌ Failed to set target
+    exit /b 1
+)
+echo ✅ Target set to esp32s3
 
 REM Step 5: Reconfigure
 echo.
