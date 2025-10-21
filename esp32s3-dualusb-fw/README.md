@@ -21,45 +21,72 @@ Firmware for ESP32-S3 supporting USB Mass Storage (Device) mode using ESP-IDF an
 
 ## Prerequisites
 
-- **ESP-IDF 5.x** installed and configured
-- **ESP32-S3 DevKitC-1** board
-- **USB-C cable** for connection
-- **Python 3.7+** with esptool
+### Windows
+- **ESP-IDF 5.5.1** or later
+- **Python 3.8+**
+- **Git**
+- **USB-C cable**
+
+### Linux / WSL
+- **ESP-IDF 5.5.1** or later
+- **Python 3.8+**
+- **Git**
+- **Build tools**: `build-essential`, `cmake`, `ninja-build`
+- **USB-C cable**
+
+### Docker (Recommended for Consistency)
+- **Docker** installed
+- **Docker Compose** (optional)
+- **USB-C cable**
 
 ## Quick Start
 
-### 1. Set Target and Configure
+### Option 1: Native Build (Windows/Linux/WSL)
 
 ```bash
+# Clone the repository
+git clone https://github.com/ansarirahim/esp32s3-dualusb-fw.git
 cd esp32s3-dualusb-fw
+
+# Set target and build
 idf.py set-target esp32s3
-idf.py menuconfig
+idf.py build
+
+# Flash to device
+idf.py -p <COM_PORT> flash
+
+# Monitor output
+idf.py monitor
 ```
 
-The `sdkconfig.defaults` file contains pre-configured settings for:
+Replace `<COM_PORT>` with:
+- Windows: `COM3`, `COM4`, etc.
+- Linux/WSL: `/dev/ttyUSB0`, `/dev/ttyACM0`, etc.
+
+### Option 2: Docker Build (Recommended)
+
+```bash
+# Build using Docker
+docker-compose build
+docker-compose run --rm esp32 idf.py build
+
+# Flash (requires USB passthrough)
+docker-compose run --rm esp32 idf.py -p /dev/ttyUSB0 flash
+```
+
+See [DOCKER.md](DOCKER.md) for detailed Docker instructions.
+
+### Configuration
+
+The `sdkconfig.defaults` file contains pre-configured settings:
 - FreeRTOS tick rate (1000 Hz)
 - FATFS with long filename support
 - TinyUSB MSC enabled
 - Immediate FSYNC for data safety
 
-### 2. Build
-
+To customize:
 ```bash
-idf.py build
-```
-
-### 3. Flash
-
-```bash
-idf.py -p <COM_PORT> flash
-```
-
-Replace `<COM_PORT>` with your serial port (e.g., `COM3` on Windows, `/dev/ttyUSB0` on Linux).
-
-### 4. Monitor
-
-```bash
-idf.py monitor
+idf.py menuconfig
 ```
 
 Expected output:

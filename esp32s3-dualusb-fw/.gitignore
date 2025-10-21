@@ -1,10 +1,45 @@
-﻿build/
-sdkconfig
-sdkconfig.old
+﻿# Build artifacts
+build/
+managed_components/
 *.bin
 *.elf
 *.map
-.DS_Store
-Thumbs.db
+*.o
+*.a
+*.so
+
+# Configuration
+sdkconfig
+sdkconfig.old
+.sdkconfig.swp
+
+# IDE
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# Logs
+*.log
+build_*.log
+
+# Docker
+.dockerignore

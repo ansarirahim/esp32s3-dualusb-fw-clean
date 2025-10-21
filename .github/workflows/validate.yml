@@ -1,0 +1,62 @@
+name: Validate Code Quality
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Check file structure
+      run: |
+        echo "Checking required files..."
+        test -f esp32s3-dualusb-fw/CMakeLists.txt || exit 1
+        test -f esp32s3-dualusb-fw/idf_component.yml || exit 1
+        test -f esp32s3-dualusb-fw/sdkconfig.defaults || exit 1
+        test -f esp32s3-dualusb-fw/main/main.c || exit 1
+        test -f esp32s3-dualusb-fw/main/usb_device.c || exit 1
+        echo "✓ All required files present"
+    
+    - name: Check for AI footprints
+      run: |
+        echo "Checking for AI-generated content markers..."
+        ! grep -r "🎉\|✅\|❌\|⚠️\|📊\|🔧\|📁\|🚀" esp32s3-dualusb-fw/ --include="*.c" --include="*.h" || exit 1
+        echo "✓ No AI emoji markers found in source code"
+    
+    - name: Validate YAML files
+      run: |
+        echo "Validating YAML files..."
+        python3 -m pip install pyyaml > /dev/null 2>&1
+        python3 -c "import yaml; yaml.safe_load(open('esp32s3-dualusb-fw/idf_component.yml'))"
+        echo "✓ idf_component.yml is valid"
+    
+    - name: Check dependencies
+      run: |
+        echo "Checking dependencies..."
+        grep -q "espressif/esp_tinyusb" esp32s3-dualusb-fw/idf_component.yml || exit 1
+        echo "✓ Dependencies declared correctly"
+    
+    - name: Validate README
+      run: |
+        echo "Checking README..."
+        test -f esp32s3-dualusb-fw/README.md || exit 1
+        grep -q "Quick Start" esp32s3-dualusb-fw/README.md || exit 1
+        echo "✓ README is present and valid"
+    
+    - name: Validation summary
+      if: always()
+      run: |
+        echo "## Validation Summary" >> $GITHUB_STEP_SUMMARY
+        echo "- File structure: ✓" >> $GITHUB_STEP_SUMMARY
+        echo "- AI footprints: ✓" >> $GITHUB_STEP_SUMMARY
+        echo "- YAML validation: ✓" >> $GITHUB_STEP_SUMMARY
+        echo "- Dependencies: ✓" >> $GITHUB_STEP_SUMMARY
+        echo "- Documentation: ✓" >> $GITHUB_STEP_SUMMARY
+

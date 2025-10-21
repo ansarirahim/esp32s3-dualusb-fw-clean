@@ -1,0 +1,148 @@
+# Doxyfile for ESP32-S3 Dual USB Firmware
+# Generated for professional documentation generation
+
+PROJECT_NAME           = "ESP32-S3 Dual USB Firmware"
+PROJECT_NUMBER         = "1.0.0"
+PROJECT_BRIEF          = "USB Device Mode (MSC) with Internal FATFS for ESP32-S3"
+PROJECT_LOGO           = ""
+
+# Author and Organization
+AUTHOR_NAME            = "A.R. Ansari"
+AUTHOR_EMAIL           = "ansarirahim1@gmail.com"
+ORGANIZATION_NAME      = "A.R. Ansari"
+ORGANIZATION_LOGO      = ""
+
+# Output directories
+OUTPUT_DIRECTORY       = ./docs/doxygen
+CREATE_SUBDIRS         = YES
+
+# Input files
+INPUT                  = ./main \
+                         ./components \
+                         ./docs
+
+INPUT_ENCODING         = UTF-8
+FILE_PATTERNS          = *.c *.h *.cpp *.hpp
+RECURSIVE              = YES
+
+# Exclude patterns
+EXCLUDE_PATTERNS       = */build/* \
+                         */managed_components/* \
+                         */test/*
+
+# Documentation options
+EXTRACT_ALL            = NO
+EXTRACT_PRIVATE        = YES
+EXTRACT_STATIC         = YES
+EXTRACT_LOCAL_CLASSES  = YES
+EXTRACT_ANON_NSPACES   = YES
+
+# Source code browsing
+SOURCE_BROWSER         = YES
+INLINE_SOURCES         = YES
+STRIP_CODE_COMMENTS    = NO
+
+# Doxygen processing
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = YES
+EXPAND_ONLY_PREDEF     = NO
+SEARCH_INCLUDES        = YES
+
+# Output formats
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+HTML_FILE_EXTENSION    = .html
+HTML_HEADER            = 
+HTML_FOOTER            = 
+HTML_STYLESHEET        = 
+HTML_EXTRA_STYLESHEET  = 
+GENERATE_HTMLHELP      = NO
+GENERATE_CHI           = NO
+GENERATE_LATEX         = YES
+LATEX_OUTPUT           = latex
+LATEX_CMD_NAME         = latex
+MAKEINDEX_CMD_NAME     = makeindex
+GENERATE_RTF           = NO
+GENERATE_MAN           = YES
+MAN_OUTPUT             = man
+MAN_EXTENSION          = .3
+GENERATE_XML           = YES
+XML_OUTPUT             = xml
+GENERATE_DOCBOOK       = NO
+GENERATE_AUTOGEN_DEF   = NO
+
+# Diagram generation
+HAVE_DOT               = YES
+DOT_NUM_THREADS        = 4
+CLASS_DIAGRAMS         = YES
+MSCGEN_PATH            = 
+DIA_PATH               = 
+HIDE_UNDOC_RELATIONS   = YES
+HAVE_DOT               = YES
+CLASS_GRAPH            = YES
+COLLABORATION_GRAPH    = YES
+GROUP_GRAPHS           = YES
+UML_LOOK               = NO
+UML_LIMIT_NUM_FIELDS   = 10
+TEMPLATE_RELATIONS     = NO
+INCLUDE_GRAPH          = YES
+INCLUDED_BY_GRAPH      = YES
+CALL_GRAPH             = YES
+CALLER_GRAPH           = YES
+GRAPHICAL_HIERARCHY    = YES
+DIRECTORY_GRAPH        = YES
+DOT_IMAGE_FORMAT       = png
+INTERACTIVE_SVG        = NO
+DOT_PATH               = 
+DOTFILE_DIRS           = 
+MSCFILE_DIRS           = 
+DIAFILE_DIRS           = 
+PLANTUML_JAR_PATH      = 
+PLANTUML_CFG_FILE      = 
+PLANTUML_INCLUDE_PATH  = 
+DOT_GRAPH_MAX_NODES    = 50
+MAX_DOT_GRAPH_DEPTH    = 0
+DOT_TRANSPARENT        = NO
+DOT_MULTIPLE_TARGETS   = NO
+GENERATE_LEGEND        = YES
+DOT_CLEANUP            = YES
+
+# Search engine
+SEARCHENGINE           = YES
+SERVER_BASED_SEARCH    = NO
+EXTERNAL_SEARCH        = NO
+
+# Miscellaneous
+QUIET                  = NO
+WARNINGS               = YES
+WARN_IF_UNDOCUMENTED   = YES
+WARN_IF_DOC_LACKED     = YES
+WARN_NO_PARAMDOC       = YES
+WARN_AS_ERROR          = NO
+WARN_FORMAT            = "$file:$line: $text"
+WARN_LOGFILE           = 
+
+# Sorting
+SORT_MEMBER_DOCS       = YES
+SORT_BRIEF_DOCS        = NO
+SORT_MEMBERS_CTORS_1ST = NO
+SORT_GROUP_NAMES       = NO
+SORT_BY_SCOPE_NAME     = NO
+
+# Aliases and custom commands
+ALIASES                = 
+
+# Build related
+SHOW_NAMESPACES        = YES
+SHOW_FILES             = YES
+SHOW_MODULES           = YES
+SHOW_USED_FILES        = YES
+
+# Clang integration
+CLANG_ASSISTED_PARSING = NO
+CLANG_ADD_INC_PATHS    = YES
+CLANG_USE_HEADERS      = YES
+
+# Version control
+USE_MDFILE_AS_MAINPAGE = README.md
+

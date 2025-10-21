@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  esp32:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: esp32-build
+    volumes:
+      - .:/project
+      - /dev:/dev
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev/ttyACM0:/dev/ttyACM0
+    environment:
+      - IDF_PATH=/opt/esp-idf
+      - IDF_TARGET=esp32s3
+    stdin_open: true
+    tty: true
+    privileged: true
+
