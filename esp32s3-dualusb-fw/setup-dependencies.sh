@@ -12,6 +12,15 @@ echo "║                                                                ║"
 echo "╚════════════════════════════════════════════════════════════════╝"
 echo ""
 
+# Step 0: Set target to esp32s3
+echo "Step 0: Setting build target to esp32s3..."
+idf.py set-target esp32s3
+if [ $? -ne 0 ]; then
+    echo "❌ Failed to set target"
+    exit 1
+fi
+echo "✅ Target set to esp32s3"
+
 # Step 1: Add dependency
 echo "Step 1: Adding esp_tinyusb dependency..."
 idf.py add-dependency espressif/esp_tinyusb

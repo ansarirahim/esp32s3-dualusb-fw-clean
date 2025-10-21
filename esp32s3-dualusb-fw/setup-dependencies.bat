@@ -10,6 +10,15 @@ echo ║                                                                ║
 echo ╚════════════════════════════════════════════════════════════════╝
 echo.
 
+REM Step 0: Set target to esp32s3
+echo Step 0: Setting build target to esp32s3...
+idf.py set-target esp32s3
+if errorlevel 1 (
+    echo ❌ Failed to set target
+    exit /b 1
+)
+echo ✅ Target set to esp32s3
+
 REM Step 1: Add dependency
 echo Step 1: Adding esp_tinyusb dependency...
 python -m idf add-dependency espressif/esp_tinyusb

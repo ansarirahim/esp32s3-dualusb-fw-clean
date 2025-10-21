@@ -19,9 +19,14 @@ chmod +x setup-dependencies.sh
 
 ## Manual Setup (If Script Doesn't Work)
 
-### Step 1: Add Dependency
+### Step 0: Set Target (IMPORTANT!)
 ```bash
 cd esp32s3-dualusb-fw
+idf.py set-target esp32s3
+```
+
+### Step 1: Add Dependency
+```bash
 idf.py add-dependency espressif/esp_tinyusb
 ```
 
@@ -51,6 +56,7 @@ idf.py -p COM3 flash
 
 | Command | Purpose |
 |---------|---------|
+| `idf.py set-target esp32s3` | Sets the build target to ESP32-S3 (CRITICAL!) |
 | `idf.py add-dependency espressif/esp_tinyusb` | Downloads and registers the esp_tinyusb component |
 | `idf.py reconfigure` | Updates CMake configuration with the new component |
 | `idf.py fullclean` | Removes old build artifacts |
