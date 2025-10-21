@@ -41,16 +41,14 @@ else
     echo "✅ No dependencies.lock to clean"
 fi
 
-# Step 3: Add dependency BEFORE set-target (skip if already exists)
+# Step 3: Reconfigure to create dependencies.lock
 echo ""
-echo "Step 3: Adding esp_tinyusb dependency..."
-idf.py add-dependency espressif/esp_tinyusb
+echo "Step 3: Reconfiguring to create dependencies.lock..."
+idf.py reconfigure
 if [ $? -ne 0 ]; then
-    echo "⚠️  Dependency already exists (this is OK)"
-else
-    echo "✅ Dependency added"
+    echo "⚠️  Reconfigure failed (this is expected on first run)"
 fi
-echo "✅ Proceeding with build"
+echo "✅ Proceeding with set-target"
 
 # Step 4: Set target to esp32s3
 echo ""
@@ -62,7 +60,7 @@ if [ $? -ne 0 ]; then
 fi
 echo "✅ Target set to esp32s3"
 
-# Step 5: Reconfigure
+# Step 5: Reconfigure again
 echo ""
 echo "Step 5: Reconfiguring build system..."
 idf.py reconfigure
