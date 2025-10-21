@@ -32,17 +32,22 @@ del dependencies.lock
 idf.py set-target esp32s3
 ```
 
-### Step 2: Reconfigure
+### Step 2: Add Dependency
+```bash
+idf.py add-dependency espressif/esp_tinyusb
+```
+
+### Step 3: Reconfigure
 ```bash
 idf.py reconfigure
 ```
 
-### Step 3: Build
+### Step 4: Build
 ```bash
 idf.py build
 ```
 
-### Step 4: Flash (Optional)
+### Step 5: Flash (Optional)
 ```bash
 idf.py -p COM3 flash
 ```
@@ -57,7 +62,8 @@ idf.py -p COM3 flash
 | `rmdir /s /q managed_components` | Deletes old component cache |
 | `del dependencies.lock` | Deletes old dependency lock file |
 | `idf.py set-target esp32s3` | Sets the build target to ESP32-S3 (CRITICAL!) |
-| `idf.py reconfigure` | Updates CMake configuration with the new target |
+| `idf.py add-dependency espressif/esp_tinyusb` | Downloads esp_tinyusb component and creates dependencies.lock |
+| `idf.py reconfigure` | Updates CMake configuration with the new target and component |
 | `idf.py build` | Compiles the firmware |
 | `idf.py -p COM3 flash` | Flashes firmware to device (replace COM3 with your port) |
 

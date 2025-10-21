@@ -51,9 +51,19 @@ if [ $? -ne 0 ]; then
 fi
 echo "✅ Target set to esp32s3"
 
-# Step 4: Reconfigure
+# Step 4: Add dependency
 echo ""
-echo "Step 4: Reconfiguring build system..."
+echo "Step 4: Adding esp_tinyusb dependency..."
+idf.py add-dependency espressif/esp_tinyusb
+if [ $? -ne 0 ]; then
+    echo "❌ Failed to add dependency"
+    exit 1
+fi
+echo "✅ Dependency added"
+
+# Step 5: Reconfigure
+echo ""
+echo "Step 5: Reconfiguring build system..."
 idf.py reconfigure
 if [ $? -ne 0 ]; then
     echo "❌ Failed to reconfigure"
@@ -61,9 +71,9 @@ if [ $? -ne 0 ]; then
 fi
 echo "✅ Build system reconfigured"
 
-# Step 5: Build
+# Step 6: Build
 echo ""
-echo "Step 5: Building firmware..."
+echo "Step 6: Building firmware..."
 idf.py build
 if [ $? -ne 0 ]; then
     echo "❌ Build failed"

@@ -49,9 +49,19 @@ if errorlevel 1 (
 )
 echo ✅ Target set to esp32s3
 
-REM Step 4: Reconfigure
+REM Step 4: Add dependency
 echo.
-echo Step 4: Reconfiguring build system...
+echo Step 4: Adding esp_tinyusb dependency...
+idf.py add-dependency espressif/esp_tinyusb
+if errorlevel 1 (
+    echo ❌ Failed to add dependency
+    exit /b 1
+)
+echo ✅ Dependency added
+
+REM Step 5: Reconfigure
+echo.
+echo Step 5: Reconfiguring build system...
 idf.py reconfigure
 if errorlevel 1 (
     echo ❌ Failed to reconfigure
@@ -59,9 +69,9 @@ if errorlevel 1 (
 )
 echo ✅ Build system reconfigured
 
-REM Step 5: Build
+REM Step 6: Build
 echo.
-echo Step 5: Building firmware...
+echo Step 6: Building firmware...
 idf.py build
 if errorlevel 1 (
     echo ❌ Build failed
