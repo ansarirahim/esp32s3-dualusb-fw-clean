@@ -1,0 +1,16 @@
+Command: cmake -G Ninja -DPYTHON_DEPS_CHECKED=1 -DPYTHON=C:\Users\Abdul\.espressif\python_env\idf5.5_py3.10_env\Scripts\python.exe -DESP_PLATFORM=1 -DCCACHE_ENABLE=0 C:\Users\Abdul\Documents\GitHub\Michael USB OTG\esp32s3-dualusb-fw
+C:\Users\Abdul\AppData\Local\Temp\kconfgen_tmpk0negjvg:7: warning: '1' is not a valid value for the bool symbol FATFS_LFN_STACK (defined at C:/Users/Abdul/esp-idf-v5.5.1/components/fatfs/Kconfig:22). Assignment ignored.
+Traceback (most recent call last):
+  File "C:\Users\Abdul\esp-idf-v5.5.1\components\esp_rom\gen_gdbinit.py", line 72, in <module>
+    gdbinit_lines = generate_gdbinit_rom_add_symbols(target)
+  File "C:\Users\Abdul\esp-idf-v5.5.1\components\esp_rom\gen_gdbinit.py", line 32, in generate_gdbinit_rom_add_symbols
+    raise EnvironmentError(
+OSError: ESP_ROM_ELF_DIR environment variable is not defined. Please try to run IDF "install" and "export" scripts.
+CMake Warning at C:/Users/Abdul/esp-idf-v5.5.1/tools/cmake/gdbinit.cmake:52 (message):
+  Error while generating esp_rom gdbinit
+Call Stack (most recent call first):
+  C:/Users/Abdul/esp-idf-v5.5.1/tools/cmake/project.cmake:356 (__generate_gdbinit)
+  C:/Users/Abdul/esp-idf-v5.5.1/tools/cmake/project.cmake:974 (__project_info)
+  CMakeLists.txt:3 (project)
+
+

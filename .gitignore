@@ -1,0 +1,60 @@
+﻿# Build artifacts (keep build/ folder for successful builds)
+# build/  # COMMENTED OUT - we push successful builds
+managed_components/
+# *.bin  # COMMENTED OUT - we push .bin files from build/
+# *.elf  # COMMENTED OUT - we push .elf files from build/
+*.map
+*.o
+*.a
+*.so
+
+# Configuration
+# sdkconfig  # COMMENTED OUT - we push sdkconfig
+sdkconfig.old
+.sdkconfig.swp
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+
+# Logs
+*.log
+build_*.log
+
+# Docker
+.dockerignore
+
+# Exclude only build cache/temp files, not the build output
+build/CMakeFiles/
+build/esp-idf/
+build/managed_components/
+build/*.ninja
+build/cmake_install.cmake
+build/CMakeCache.txt
+build/compile_commands.json
+build/config.env
+build/kconfigs.in
+build/kconfigs_projbuild.in
+build/ldgen_libraries.in
+build/project_elf_src_esp32s3.c
+build/x509_crt_bundle.S
+build/gdbinit
