@@ -17,13 +17,18 @@ echo ===========================================================================
 echo.
 
 REM Check if docker is available
-where docker >nul 2>&1
+docker --version >nul 2>&1
 if errorlevel 1 (
     echo.
     echo ERROR: Docker is not installed or not in PATH
     echo.
     echo Please install Docker Desktop from:
     echo https://www.docker.com/products/docker-desktop
+    echo.
+    echo If Docker is installed, try:
+    echo 1. Restart PowerShell
+    echo 2. Start Docker Desktop application
+    echo 3. Run this script again
     echo.
     pause
     exit /b 1
