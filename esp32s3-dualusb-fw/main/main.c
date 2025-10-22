@@ -12,15 +12,18 @@
  * - LED status indicators
  * - Internal FATFS filesystem
  * - USB Device Mode (MSC - Mass Storage Class)
+ * - USB Host Mode (MSC - Mass Storage Class)
  *
  * @section features Features
  * - USB Device Mode (MSC) with internal FATFS
+ * - USB Host Mode (MSC) for external USB drives
  * - LED status indication (IDLE, ACTIVE, ERROR)
  * - FreeRTOS task management
  * - Error handling and recovery
  *
  * @section milestone Milestone
  * Milestone 1: USB Device Mode (MSC) with internal FATFS
+ * Milestone 2: USB Host Mode (MSC) for external USB drives
  *
  * @section contact Contact
  * - Email: ansarirahim1@gmail.com
@@ -38,6 +41,8 @@
 #include "led_control.h"
 #include "filesystem.h"
 #include "usb_device.h"
+#include "usb_host.h"
+#include "usb_mode.h"
 
 static const char *TAG = "app";  /**< Log tag for application messages */
 
@@ -82,7 +87,24 @@ void app_main(void) {
         return;
     }
 
-    ESP_LOGI(TAG, "ESP32-S3 Dual USB FW ready - Device Mode (MSC)");
+    /* Initialize USB Host Mode (MSC) */
+    if (!usb_host_init()) {
+        ESP_LOGE(TAG, "Failed to initialize USB host");
+        led_set_state(LED_STATE_ERROR);
+        return;
+    }
+
+    /* Initialize USB Mode Control */
+    if (!usb_mode_init()) {
+        ESP_LOGE(TAG, "Failed to initialize USB mode control");
+        led_set_state(LED_STATE_ERROR);
+        return;
+    }
+
+    /* Set to dual mode with automatic switching */
+    usb_mode_set(USB_MODE_DUAL_AUTO);
+
+    ESP_LOGI(TAG, "ESP32-S3 Dual USB FW ready - Dual Mode (Device + Host)");
 
     /* Keep app running */
     while (1) {

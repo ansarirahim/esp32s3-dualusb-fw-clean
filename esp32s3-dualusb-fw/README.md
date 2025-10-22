@@ -1,12 +1,13 @@
 ﻿# ESP32-S3 Dual USB Firmware
 
 **Author**: A.R. Ansari <ansarirahim1@gmail.com>
-**Date**: 2025-10-20
-**Project**: ESP32-S3 Dual USB Firmware for Michael Steinmann
+**Version**: 1.0.0
+**Date**: 2025-10-22
 
-Firmware for ESP32-S3 supporting USB Mass Storage (Device) mode using ESP-IDF and TinyUSB.
-
-**Milestone 1**: Device Mode (MSC) with internal FATFS volume.
+Complete firmware for ESP32-S3 supporting:
+- **USB Device Mode (MSC)**: Expose internal FATFS as USB drive
+- **USB Host Mode (MSC)**: Read/write files from external USB drives
+- **Dual-Mode Operation**: Automatic switching between modes
 
 ## Features
 
@@ -177,41 +178,159 @@ esp32s3-dualusb-fw/
 
 ## Troubleshooting
 
+### "Invalid image block, can't boot" Error
+
+**Cause**: Binary flashed without bootloader and partition table
+
+**Solution**: Use Docker (recommended) or flash all 3 components:
+```bash
+# With Docker
+docker-compose run --rm esp32 idf.py flash
+
+# With esptool.py
+esptool.py -p COM3 write_flash @build/flash_args
+```
+
+**Flash Addresses (CRITICAL)**:
+- Bootloader: `0x0` → `bootloader/bootloader.bin`
+- Partition Table: `0x8000` → `partition_table/partition-table.bin`
+- Application: `0x10000` → `esp32s3_dualusb_fw.bin`
+
 ### Device doesn't enumerate
-- Check USB cable connection
-- Verify GPIO20/GPIO19 are not used by other peripherals
-- Check serial logs for initialization errors
-- Try different USB port on host
+- **Check USB cable**: Use data cable, not power-only
+- **Check power**: Verify 5V on VBUS pin
+- **Check GPIO20/GPIO19**: Ensure not used by other peripherals
+- **Try different USB port**: Some ports have issues
+- **Check serial logs**: Look for initialization errors
 
 ### LED doesn't blink
-- Verify GPIO6 is available on your board
-- Check LED polarity (anode to GPIO6, cathode to GND)
-- Verify resistor value (220Ω typical)
-- Check serial logs for LED initialization
+- **Verify GPIO48**: Check pin is available
+- **Check LED polarity**: Anode to GPIO48, cathode to GND
+- **Check resistor**: 220Ω typical value
+- **Check power**: Verify 3.3V supply
 
-### Files disappear after power cycle
-- Ensure safe eject before power-off
-- Check filesystem logs for errors
-- Try reformatting the device (will erase all data)
+### USB connection drops
+- **Check USB cable quality**: Use shielded cable
+- **Check power supply**: Ensure stable 5V
+- **Check for interference**: Move away from RF sources
+- **Try different USB port**: Some ports are unstable
 
-### Slow copy speed
-- This is normal for SPI flash (500 KB/s write)
-- Larger files take proportionally longer
-- Do not interrupt the copy process
+### Slow file transfer
+- **Normal for SPI flash**: ~500 KB/s write speed is expected
+- **Larger files take time**: 1 MB file ≈ 2 seconds
+- **Don't interrupt**: Let transfer complete
+- **Check host system**: Close other applications
 
-## Future Milestones
+### Host mode not detecting external USB device
+- **Check USB device**: Try different USB drive
+- **Check USB cable**: Use quality cable
+- **Check power**: External devices may need more power
+- **Check device format**: FAT32 recommended
 
-- **M2**: USB Host Mode (MSC) + mode selection via BOOT1
-- **M3**: File copy from Device to Host (calculator support)
-- **M4**: RGB LED mapping, advanced error codes, telemetry
+### Files lost after power cycle
+- **Always safely eject**: Use "Safely Remove Hardware"
+- **Check filesystem logs**: Look for errors
+- **Verify power supply**: Ensure stable power during writes
 
-## License
+## Flashing with Docker (Recommended)
 
-[Add your license here]
+Docker ensures consistent build environment and correct flashing:
 
-## Support
+```bash
+# Build and flash
+docker-compose up --build
+docker-compose run --rm esp32 idf.py flash
 
-For issues or questions, please refer to:
+# Monitor output
+docker-compose run --rm esp32 idf.py monitor
+
+# Run tests
+docker-compose run --rm esp32 idf.py test
+```
+
+### Docker Build Issues
+
+If you get authentication error: `no basic auth credentials`
+
+**Solution**: Clean Docker cache and rebuild
+```bash
+# Clean Docker cache
+docker system prune -a --volumes -f
+
+# Build fresh (no cache)
+docker-compose build --no-cache
+
+# Run
+docker-compose up
+```
+
+This removes cached images and rebuilds from official `espressif/idf:v5.5.1` image.
+
+## Flashing with esptool.py
+
+```bash
+# Install esptool
+pip install esptool
+
+# Flash all components
+cd build
+esptool.py -p COM3 -b 460800 write_flash @flash_args
+
+# Monitor
+esptool.py -p COM3 monitor
+```
+
+Replace `COM3` with your actual COM port.
+
+## Features Implemented
+
+### Milestone 1: USB Device Mode (MSC)
+- ✅ USB Device Mode with internal FATFS
+- ✅ Block device with sector-level operations
+- ✅ SCSI START/STOP UNIT handling
+- ✅ I/O activity monitoring
+- ✅ LED status indicators
+- ✅ 40+ unit tests
+
+### Milestone 2: USB Host Mode (MSC)
+- ✅ USB Host Mode for external USB drives
+- ✅ File read/write/list operations
+- ✅ Device detection and monitoring
+- ✅ State management
+- ✅ Error handling and recovery
+- ✅ 18+ unit tests
+
+### Milestone 3: Dual-Mode Integration
+- ✅ Dual-mode architecture with mode switching
+- ✅ Automatic mode detection
+- ✅ LED priority management
+- ✅ 16+ integration tests
+- ✅ Complete API reference
+
+## Testing
+
+Run unit tests:
+
+```bash
+# With Docker
+docker-compose run --rm esp32 idf.py test
+
+# With native build
+cd test
+cmake -B build
+cmake --build build
+./build/esp32s3_dualusb_fw_test
+```
+
+## References
+
 - [ESP-IDF Documentation](https://docs.espressif.com/projects/esp-idf/en/latest/)
 - [TinyUSB Documentation](https://docs.tinyusb.org/)
 - [FatFS Documentation](http://elm-chan.org/fsw/ff/)
+- [ESP32-S3 Datasheet](https://www.espressif.com/sites/default/files/documentation/esp32-s3_datasheet_en.pdf)
+
+## Support
+
+For issues or questions:
+- Email: ansarirahim1@gmail.com
+- GitHub: https://github.com/ansarirahim
