@@ -21,7 +21,49 @@ echo "ESP32-S3 Dual USB Firmware - Build & Flash"
 echo "============================================================================"
 echo ""
 
-# Check if docker is available
+# Parse command line arguments FIRST (before Docker check)
+COMMAND="$1"
+
+# Allow help without Docker
+if [ "$COMMAND" = "help" ]; then
+    echo "Usage: ./build.sh [command]"
+    echo ""
+    echo "Commands:"
+    echo "  build       - Build firmware"
+    echo "  flash       - Flash to device"
+    echo "  monitor     - Monitor serial output"
+    echo "  test        - Run tests"
+    echo "  clean       - Clean build artifacts"
+    echo "  erase       - Erase flash memory"
+    echo "  full        - Build and flash"
+    echo "  help        - Show this help"
+    echo ""
+    exit 0
+fi
+
+# Allow no arguments to show usage without Docker
+if [ $# -eq 0 ]; then
+    echo "Usage: ./build.sh [command]"
+    echo ""
+    echo "Commands:"
+    echo "  build       - Build firmware"
+    echo "  flash       - Flash to device"
+    echo "  monitor     - Monitor serial output"
+    echo "  test        - Run tests"
+    echo "  clean       - Clean build artifacts"
+    echo "  erase       - Erase flash memory"
+    echo "  full        - Build and flash"
+    echo "  help        - Show this help"
+    echo ""
+    echo "Examples:"
+    echo "  ./build.sh build"
+    echo "  ./build.sh flash"
+    echo "  ./build.sh full"
+    echo ""
+    exit 0
+fi
+
+# NOW check if docker is available (after help/no-args)
 if ! command -v docker &> /dev/null; then
     echo -e "${RED}ERROR: Docker is not installed or not in PATH${RESET}"
     echo ""
@@ -45,30 +87,7 @@ fi
 echo -e "${GREEN}✓ docker-compose.yml found${RESET}"
 echo ""
 
-# Parse command line arguments
-if [ $# -eq 0 ]; then
-    echo "Usage: ./build.sh [command]"
-    echo ""
-    echo "Commands:"
-    echo "  build       - Build firmware"
-    echo "  flash       - Flash to device"
-    echo "  monitor     - Monitor serial output"
-    echo "  test        - Run tests"
-    echo "  clean       - Clean build artifacts"
-    echo "  erase       - Erase flash memory"
-    echo "  full        - Build and flash"
-    echo "  help        - Show this help"
-    echo ""
-    echo "Examples:"
-    echo "  ./build.sh build"
-    echo "  ./build.sh flash"
-    echo "  ./build.sh full"
-    echo ""
-    exit 0
-fi
-
-COMMAND="$1"
-
+# Now execute the command
 case "$COMMAND" in
     help)
         echo "Usage: ./build.sh [command]"
