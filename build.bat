@@ -16,7 +16,49 @@ echo ESP32-S3 Dual USB Firmware - Build and Flash
 echo ============================================================================
 echo.
 
-REM Check if docker is available
+REM Parse command line arguments FIRST (before Docker check)
+set COMMAND=%1
+
+REM Allow help without Docker
+if /i "%COMMAND%"=="help" (
+    echo Usage: build.bat [command]
+    echo.
+    echo Commands:
+    echo   build       - Build firmware
+    echo   flash       - Flash to device
+    echo   monitor     - Monitor serial output
+    echo   test        - Run tests
+    echo   clean       - Clean build artifacts
+    echo   erase       - Erase flash memory
+    echo   full        - Build and flash
+    echo   help        - Show this help
+    echo.
+    exit /b 0
+)
+
+if "%1"=="" (
+    echo Usage: build.bat [command]
+    echo.
+    echo Commands:
+    echo   build       - Build firmware
+    echo   flash       - Flash to device
+    echo   monitor     - Monitor serial output
+    echo   test        - Run tests
+    echo   clean       - Clean build artifacts
+    echo   erase       - Erase flash memory
+    echo   full        - Build and flash
+    echo   help        - Show this help
+    echo.
+    echo Examples:
+    echo   build.bat build
+    echo   build.bat flash
+    echo   build.bat full
+    echo.
+    pause
+    exit /b 0
+)
+
+REM NOW check if docker is available (after help/no-args)
 docker --version >nul 2>&1
 if errorlevel 1 (
     echo.
@@ -50,47 +92,6 @@ if not exist "docker-compose.yml" (
 
 echo [OK] docker-compose.yml found
 echo.
-
-REM Parse command line arguments
-if "%1"=="" (
-    echo Usage: build.bat [command]
-    echo.
-    echo Commands:
-    echo   build       - Build firmware
-    echo   flash       - Flash to device
-    echo   monitor     - Monitor serial output
-    echo   test        - Run tests
-    echo   clean       - Clean build artifacts
-    echo   erase       - Erase flash memory
-    echo   full        - Build and flash
-    echo   help        - Show this help
-    echo.
-    echo Examples:
-    echo   build.bat build
-    echo   build.bat flash
-    echo   build.bat full
-    echo.
-    pause
-    exit /b 0
-)
-
-set COMMAND=%1
-
-if /i "%COMMAND%"=="help" (
-    echo Usage: build.bat [command]
-    echo.
-    echo Commands:
-    echo   build       - Build firmware
-    echo   flash       - Flash to device
-    echo   monitor     - Monitor serial output
-    echo   test        - Run tests
-    echo   clean       - Clean build artifacts
-    echo   erase       - Erase flash memory
-    echo   full        - Build and flash
-    echo   help        - Show this help
-    echo.
-    exit /b 0
-)
 
 if /i "%COMMAND%"=="build" (
     echo.
