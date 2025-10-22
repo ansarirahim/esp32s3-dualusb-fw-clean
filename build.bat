@@ -10,43 +10,40 @@ REM Get the directory where this script is located
 set SCRIPT_DIR=%~dp0
 cd /d "%SCRIPT_DIR%"
 
-REM Colors for output
-set GREEN=[92m
-set YELLOW=[93m
-set RED=[91m
-set RESET=[0m
-
 echo.
 echo ============================================================================
-echo ESP32-S3 Dual USB Firmware - Build & Flash
+echo ESP32-S3 Dual USB Firmware - Build and Flash
 echo ============================================================================
 echo.
 
 REM Check if docker is available
 where docker >nul 2>&1
 if errorlevel 1 (
-    echo %RED%ERROR: Docker is not installed or not in PATH%RESET%
     echo.
-    echo Please install Docker Desktop from: https://www.docker.com/products/docker-desktop
+    echo ERROR: Docker is not installed or not in PATH
+    echo.
+    echo Please install Docker Desktop from:
+    echo https://www.docker.com/products/docker-desktop
     echo.
     pause
     exit /b 1
 )
 
-echo %GREEN%✓ Docker found%RESET%
+echo [OK] Docker found
 docker --version
 echo.
 
 REM Check if docker-compose.yml exists
 if not exist "docker-compose.yml" (
-    echo %RED%ERROR: docker-compose.yml not found in current directory%RESET%
+    echo.
+    echo ERROR: docker-compose.yml not found in current directory
     echo Current directory: %cd%
     echo.
     pause
     exit /b 1
 )
 
-echo %GREEN%✓ docker-compose.yml found%RESET%
+echo [OK] docker-compose.yml found
 echo.
 
 REM Parse command line arguments
@@ -91,92 +88,114 @@ if /i "%COMMAND%"=="help" (
 )
 
 if /i "%COMMAND%"=="build" (
-    echo %YELLOW%Building firmware...%RESET%
+    echo.
+    echo [*] Building firmware...
     docker compose run --rm esp32 idf.py build
     if errorlevel 1 (
-        echo %RED%Build failed%RESET%
+        echo.
+        echo [ERROR] Build failed
         pause
         exit /b 1
     )
-    echo %GREEN%✓ Build successful%RESET%
+    echo.
+    echo [OK] Build successful
     goto :eof
 )
 
 if /i "%COMMAND%"=="flash" (
-    echo %YELLOW%Flashing firmware...%RESET%
+    echo.
+    echo [*] Flashing firmware...
     docker compose run --rm esp32 idf.py flash
     if errorlevel 1 (
-        echo %RED%Flash failed%RESET%
+        echo.
+        echo [ERROR] Flash failed
         pause
         exit /b 1
     )
-    echo %GREEN%✓ Flash successful%RESET%
+    echo.
+    echo [OK] Flash successful
     goto :eof
 )
 
 if /i "%COMMAND%"=="monitor" (
-    echo %YELLOW%Starting serial monitor...%RESET%
+    echo.
+    echo [*] Starting serial monitor...
     docker compose run --rm esp32 idf.py monitor
     goto :eof
 )
 
 if /i "%COMMAND%"=="test" (
-    echo %YELLOW%Running tests...%RESET%
+    echo.
+    echo [*] Running tests...
     docker compose run --rm esp32 idf.py test
     if errorlevel 1 (
-        echo %RED%Tests failed%RESET%
+        echo.
+        echo [ERROR] Tests failed
         pause
         exit /b 1
     )
-    echo %GREEN%✓ Tests passed%RESET%
+    echo.
+    echo [OK] Tests passed
     goto :eof
 )
 
 if /i "%COMMAND%"=="clean" (
-    echo %YELLOW%Cleaning build artifacts...%RESET%
+    echo.
+    echo [*] Cleaning build artifacts...
     docker compose run --rm esp32 idf.py clean
     if errorlevel 1 (
-        echo %RED%Clean failed%RESET%
+        echo.
+        echo [ERROR] Clean failed
         pause
         exit /b 1
     )
-    echo %GREEN%✓ Clean successful%RESET%
+    echo.
+    echo [OK] Clean successful
     goto :eof
 )
 
 if /i "%COMMAND%"=="erase" (
-    echo %YELLOW%Erasing flash memory...%RESET%
+    echo.
+    echo [*] Erasing flash memory...
     docker compose run --rm esp32 idf.py erase_flash
     if errorlevel 1 (
-        echo %RED%Erase failed%RESET%
+        echo.
+        echo [ERROR] Erase failed
         pause
         exit /b 1
     )
-    echo %GREEN%✓ Erase successful%RESET%
+    echo.
+    echo [OK] Erase successful
     goto :eof
 )
 
 if /i "%COMMAND%"=="full" (
-    echo %YELLOW%Building and flashing...%RESET%
+    echo.
+    echo [*] Building and flashing...
     docker compose run --rm esp32 idf.py build
     if errorlevel 1 (
-        echo %RED%Build failed%RESET%
+        echo.
+        echo [ERROR] Build failed
         pause
         exit /b 1
     )
-    echo %GREEN%✓ Build successful%RESET%
+    echo.
+    echo [OK] Build successful
     echo.
     docker compose run --rm esp32 idf.py flash
     if errorlevel 1 (
-        echo %RED%Flash failed%RESET%
+        echo.
+        echo [ERROR] Flash failed
         pause
         exit /b 1
     )
-    echo %GREEN%✓ Flash successful%RESET%
+    echo.
+    echo [OK] Flash successful
     goto :eof
 )
 
-echo %RED%Unknown command: %COMMAND%%RESET%
+echo.
+echo [ERROR] Unknown command: %COMMAND%
 echo Run 'build.bat help' for usage information
 pause
 exit /b 1
