@@ -18,4 +18,5 @@ services:
     stdin_open: true
     tty: true
     privileged: true
+    entrypoint: /bin/bash -c ". $IDF_PATH/export.sh && exec /bin/bash"
 

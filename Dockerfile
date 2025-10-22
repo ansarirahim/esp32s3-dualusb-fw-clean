@@ -17,12 +17,12 @@ RUN apt-get update && apt-get install -y \
 # Copy project files
 COPY . .
 
-# Set target
-RUN idf.py set-target esp32s3
+# Source ESP-IDF environment and set target
+RUN . $IDF_PATH/export.sh && idf.py set-target esp32s3
 
 # Pre-download dependencies
-RUN idf.py build --dry-run || true
+RUN . $IDF_PATH/export.sh && idf.py build --dry-run || true
 
-# Default command
-CMD ["/bin/bash"]
+# Default command - source environment on entry
+CMD ["/bin/bash", "-c", ". $IDF_PATH/export.sh && /bin/bash"]
 
