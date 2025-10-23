@@ -6,6 +6,9 @@ FROM espressif/idf:v5.5.1
 # Set working directory
 WORKDIR /project
 
+# Set IDF_PATH explicitly (espressif/idf image location)
+ENV IDF_PATH=/opt/esp-idf
+
 # Install additional tools
 RUN apt-get update && apt-get install -y \
     git \
