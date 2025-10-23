@@ -42,12 +42,55 @@ Complete firmware for ESP32-S3 supporting:
 
 ## Quick Start
 
-### Option 1: Native Build (Windows/Linux/WSL)
+### Option 1: Use Build Scripts (RECOMMENDED)
+
+**Windows** (requires Docker Desktop installed):
+```powershell
+# Clone the repository
+git clone https://github.com/ansarirahim/esp32s3-dualusb-fw-clean.git
+cd esp32s3-dualusb-fw-clean
+
+# Run as Administrator (important!)
+# Right-click PowerShell → Run as administrator, then:
+
+.\build.bat build      # Build firmware
+.\build.bat flash      # Flash to device
+.\build.bat monitor    # Monitor serial output
+.\build.bat full       # Build and flash
+```
+
+**Linux/Mac**:
+```bash
+# Clone the repository
+git clone https://github.com/ansarirahim/esp32s3-dualusb-fw-clean.git
+cd esp32s3-dualusb-fw-clean
+
+bash build.sh build    # Build firmware
+bash build.sh flash    # Flash to device
+bash build.sh monitor  # Monitor serial output
+bash build.sh full     # Build and flash
+```
+
+### Option 2: Docker Build (Manual)
+
+```bash
+# Build using Docker
+docker compose build --no-cache
+docker compose run --rm esp32 idf.py build
+
+# Flash (requires USB passthrough)
+docker compose run --rm esp32 idf.py -p /dev/ttyUSB0 flash
+
+# Monitor
+docker compose run --rm esp32 idf.py monitor
+```
+
+### Option 3: Native Build (Windows/Linux/WSL)
 
 ```bash
 # Clone the repository
-git clone https://github.com/ansarirahim/esp32s3-dualusb-fw.git
-cd esp32s3-dualusb-fw
+git clone https://github.com/ansarirahim/esp32s3-dualusb-fw-clean.git
+cd esp32s3-dualusb-fw-clean
 
 # Set target and build
 idf.py set-target esp32s3
@@ -63,19 +106,6 @@ idf.py monitor
 Replace `<COM_PORT>` with:
 - Windows: `COM3`, `COM4`, etc.
 - Linux/WSL: `/dev/ttyUSB0`, `/dev/ttyACM0`, etc.
-
-### Option 2: Docker Build (Recommended)
-
-```bash
-# Build using Docker
-docker-compose build
-docker-compose run --rm esp32 idf.py build
-
-# Flash (requires USB passthrough)
-docker-compose run --rm esp32 idf.py -p /dev/ttyUSB0 flash
-```
-
-See [DOCKER.md](DOCKER.md) for detailed Docker instructions.
 
 ### Configuration
 
@@ -178,14 +208,34 @@ esp32s3-dualusb-fw/
 
 ## Troubleshooting
 
+### Build Script Issues
+
+#### "docker: The term 'docker' is not recognized" (Windows)
+**Cause**: Docker not in PATH or not running
+**Solution**:
+1. Make sure Docker Desktop is installed and running
+2. Run PowerShell as Administrator
+3. Use `.\build-admin.bat` instead of `.\build.bat`
+
+#### "error during connect: docker client must be run with elevated privileges" (Windows)
+**Cause**: Docker requires administrator privileges
+**Solution**: Run PowerShell as Administrator before running build commands
+
+#### "docker-compose.yml not found"
+**Cause**: Not in the project directory
+**Solution**: Make sure you're in the project directory: `cd esp32s3-dualusb-fw-clean`
+
 ### "Invalid image block, can't boot" Error
 
 **Cause**: Binary flashed without bootloader and partition table
 
-**Solution**: Use Docker (recommended) or flash all 3 components:
+**Solution**: Use build scripts (recommended) or flash all 3 components:
 ```bash
+# With build script
+.\build.bat flash
+
 # With Docker
-docker-compose run --rm esp32 idf.py flash
+docker compose run --rm esp32 idf.py flash
 
 # With esptool.py
 esptool.py -p COM3 write_flash @build/flash_args
