@@ -44,7 +44,7 @@ Complete firmware for ESP32-S3 supporting:
 
 ### Option 1: Use Build Scripts (RECOMMENDED)
 
-**Windows** (requires Docker Desktop installed):
+**Windows - PowerShell** (requires Docker Desktop installed):
 ```powershell
 # Clone the repository
 git clone https://github.com/ansarirahim/esp32s3-dualusb-fw-clean.git
@@ -53,10 +53,25 @@ cd esp32s3-dualusb-fw-clean
 # Run as Administrator (important!)
 # Right-click PowerShell → Run as administrator, then:
 
-.\build.bat build      # Build firmware
-.\build.bat flash      # Flash to device
-.\build.bat monitor    # Monitor serial output
-.\build.bat full       # Build and flash
+.\build.ps1 build      # Build firmware
+.\build.ps1 flash      # Flash to device
+.\build.ps1 monitor    # Monitor serial output
+.\build.ps1 full       # Build and flash
+```
+
+**Windows - CMD** (requires Docker Desktop installed):
+```cmd
+REM Clone the repository
+git clone https://github.com/ansarirahim/esp32s3-dualusb-fw-clean.git
+cd esp32s3-dualusb-fw-clean
+
+REM Run as Administrator (important!)
+REM Right-click CMD → Run as administrator, then:
+
+build.bat build        REM Build firmware
+build.bat flash        REM Flash to device
+build.bat monitor      REM Monitor serial output
+build.bat full         REM Build and flash
 ```
 
 **Linux/Mac**:
@@ -214,12 +229,19 @@ esp32s3-dualusb-fw/
 **Cause**: Docker not in PATH or not running
 **Solution**:
 1. Make sure Docker Desktop is installed and running
-2. Run PowerShell as Administrator
-3. Use `.\build-admin.bat` instead of `.\build.bat`
+2. Run PowerShell/CMD as Administrator
+3. Use `.\build.ps1` (PowerShell) or `build.bat` (CMD)
 
 #### "error during connect: docker client must be run with elevated privileges" (Windows)
 **Cause**: Docker requires administrator privileges
-**Solution**: Run PowerShell as Administrator before running build commands
+**Solution**:
+1. **PowerShell**: Right-click PowerShell → "Run as administrator" → `.\build.ps1 build`
+2. **CMD**: Right-click CMD → "Run as administrator" → `build.bat build`
+3. **Alternative**: Use `.\build-admin.bat` to auto-request admin privileges
+
+#### "ParserError" or "Unexpected token" in PowerShell
+**Cause**: Running batch file in PowerShell instead of using PowerShell script
+**Solution**: Use `.\build.ps1` instead of `.\build.bat` when in PowerShell
 
 #### "docker-compose.yml not found"
 **Cause**: Not in the project directory
