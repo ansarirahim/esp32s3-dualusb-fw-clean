@@ -2,6 +2,7 @@
 REM ============================================================================
 REM ESP32-S3 Dual USB Firmware - Build & Flash Script (Windows)
 REM Machine-independent, user-independent, path-independent
+REM Works in both CMD.exe and PowerShell
 REM ============================================================================
 
 setlocal enabledelayedexpansion
@@ -15,6 +16,7 @@ if exist "C:\Program Files\Docker\Docker\resources\bin\docker.exe" (
     set "PATH=C:\Program Files\Docker\Docker\resources\bin;!PATH!"
 )
 
+cls
 echo.
 echo ============================================================================
 echo ESP32-S3 Dual USB Firmware - Build and Flash
