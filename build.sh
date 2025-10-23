@@ -104,8 +104,14 @@ case "$COMMAND" in
         echo ""
         ;;
     build)
+        echo -e "${YELLOW}Building Docker image...${RESET}"
+        docker compose build --no-cache
+        if [ $? -ne 0 ]; then
+            echo -e "${RED}Docker build failed${RESET}"
+            exit 1
+        fi
         echo -e "${YELLOW}Building firmware...${RESET}"
-        docker compose run --rm esp32 idf.py build
+        docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . \$IDF_PATH/export.sh && idf.py build"
         if [ $? -ne 0 ]; then
             echo -e "${RED}Build failed${RESET}"
             exit 1
@@ -114,7 +120,7 @@ case "$COMMAND" in
         ;;
     flash)
         echo -e "${YELLOW}Flashing firmware...${RESET}"
-        docker compose run --rm esp32 idf.py flash
+        docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . \$IDF_PATH/export.sh && idf.py flash"
         if [ $? -ne 0 ]; then
             echo -e "${RED}Flash failed${RESET}"
             exit 1
@@ -123,11 +129,11 @@ case "$COMMAND" in
         ;;
     monitor)
         echo -e "${YELLOW}Starting serial monitor...${RESET}"
-        docker compose run --rm esp32 idf.py monitor
+        docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . \$IDF_PATH/export.sh && idf.py monitor"
         ;;
     test)
         echo -e "${YELLOW}Running tests...${RESET}"
-        docker compose run --rm esp32 idf.py test
+        docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . \$IDF_PATH/export.sh && idf.py test"
         if [ $? -ne 0 ]; then
             echo -e "${RED}Tests failed${RESET}"
             exit 1
@@ -136,7 +142,7 @@ case "$COMMAND" in
         ;;
     clean)
         echo -e "${YELLOW}Cleaning build artifacts...${RESET}"
-        docker compose run --rm esp32 idf.py clean
+        docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . \$IDF_PATH/export.sh && idf.py fullclean"
         if [ $? -ne 0 ]; then
             echo -e "${RED}Clean failed${RESET}"
             exit 1
@@ -145,7 +151,7 @@ case "$COMMAND" in
         ;;
     erase)
         echo -e "${YELLOW}Erasing flash memory...${RESET}"
-        docker compose run --rm esp32 idf.py erase_flash
+        docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . \$IDF_PATH/export.sh && idf.py erase-flash"
         if [ $? -ne 0 ]; then
             echo -e "${RED}Erase failed${RESET}"
             exit 1
@@ -153,20 +159,19 @@ case "$COMMAND" in
         echo -e "${GREEN}✓ Erase successful${RESET}"
         ;;
     full)
+        echo -e "${YELLOW}Building Docker image...${RESET}"
+        docker compose build --no-cache
+        if [ $? -ne 0 ]; then
+            echo -e "${RED}Docker build failed${RESET}"
+            exit 1
+        fi
         echo -e "${YELLOW}Building and flashing...${RESET}"
-        docker compose run --rm esp32 idf.py build
+        docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . \$IDF_PATH/export.sh && idf.py build && idf.py flash"
         if [ $? -ne 0 ]; then
-            echo -e "${RED}Build failed${RESET}"
+            echo -e "${RED}Build or flash failed${RESET}"
             exit 1
         fi
-        echo -e "${GREEN}✓ Build successful${RESET}"
-        echo ""
-        docker compose run --rm esp32 idf.py flash
-        if [ $? -ne 0 ]; then
-            echo -e "${RED}Flash failed${RESET}"
-            exit 1
-        fi
-        echo -e "${GREEN}✓ Flash successful${RESET}"
+        echo -e "${GREEN}✓ Build and flash successful${RESET}"
         ;;
     *)
         echo -e "${RED}Unknown command: $COMMAND${RESET}"

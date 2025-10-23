@@ -101,7 +101,7 @@ switch ($Command.ToLower()) {
             Write-Host "[ERROR] Build failed"
             exit 1
         }
-        & docker compose run --rm esp32 bash -c ". `$IDF_PATH/export.sh && idf.py build"
+        & docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . `$IDF_PATH/export.sh && idf.py build"
         if ($LASTEXITCODE -ne 0) {
             Write-Host ""
             Write-Host "[ERROR] Build failed"
@@ -114,7 +114,7 @@ switch ($Command.ToLower()) {
     "flash" {
         Write-Host "[*] Flashing firmware..."
         Write-Host ""
-        & docker compose run --rm esp32 bash -c ". `$IDF_PATH/export.sh && idf.py flash"
+        & docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . `$IDF_PATH/export.sh && idf.py flash"
         if ($LASTEXITCODE -ne 0) {
             Write-Host ""
             Write-Host "[ERROR] Flash failed"
@@ -127,12 +127,12 @@ switch ($Command.ToLower()) {
     "monitor" {
         Write-Host "[*] Monitoring serial output..."
         Write-Host ""
-        & docker compose run --rm esp32 bash -c ". `$IDF_PATH/export.sh && idf.py monitor"
+        & docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . `$IDF_PATH/export.sh && idf.py monitor"
     }
     "test" {
         Write-Host "[*] Running tests..."
         Write-Host ""
-        & docker compose run --rm esp32 bash -c ". `$IDF_PATH/export.sh && idf.py test"
+        & docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . `$IDF_PATH/export.sh && idf.py test"
         if ($LASTEXITCODE -ne 0) {
             Write-Host ""
             Write-Host "[ERROR] Tests failed"
@@ -145,7 +145,7 @@ switch ($Command.ToLower()) {
     "clean" {
         Write-Host "[*] Cleaning build artifacts..."
         Write-Host ""
-        & docker compose run --rm esp32 bash -c ". `$IDF_PATH/export.sh && idf.py fullclean"
+        & docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . `$IDF_PATH/export.sh && idf.py fullclean"
         Write-Host ""
         Write-Host "[OK] Clean successful"
         Write-Host ""
@@ -153,7 +153,7 @@ switch ($Command.ToLower()) {
     "erase" {
         Write-Host "[*] Erasing flash memory..."
         Write-Host ""
-        & docker compose run --rm esp32 bash -c ". `$IDF_PATH/export.sh && idf.py erase-flash"
+        & docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . `$IDF_PATH/export.sh && idf.py erase-flash"
         if ($LASTEXITCODE -ne 0) {
             Write-Host ""
             Write-Host "[ERROR] Erase failed"
@@ -172,7 +172,7 @@ switch ($Command.ToLower()) {
             Write-Host "[ERROR] Build failed"
             exit 1
         }
-        & docker compose run --rm esp32 bash -c ". `$IDF_PATH/export.sh && idf.py build && idf.py flash"
+        & docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . `$IDF_PATH/export.sh && idf.py build && idf.py flash"
         if ($LASTEXITCODE -ne 0) {
             Write-Host ""
             Write-Host "[ERROR] Build or flash failed"

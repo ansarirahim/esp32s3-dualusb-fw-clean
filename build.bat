@@ -102,8 +102,17 @@ echo.
 
 if /i "%COMMAND%"=="build" (
     echo.
+    echo [*] Building Docker image...
+    docker compose build --no-cache
+    if errorlevel 1 (
+        echo.
+        echo [ERROR] Docker build failed
+        pause
+        exit /b 1
+    )
+    echo.
     echo [*] Building firmware...
-    docker compose run --rm esp32 idf.py build
+    docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . $IDF_PATH/export.sh && idf.py build"
     if errorlevel 1 (
         echo.
         echo [ERROR] Build failed
@@ -118,7 +127,7 @@ if /i "%COMMAND%"=="build" (
 if /i "%COMMAND%"=="flash" (
     echo.
     echo [*] Flashing firmware...
-    docker compose run --rm esp32 idf.py flash
+    docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . $IDF_PATH/export.sh && idf.py flash"
     if errorlevel 1 (
         echo.
         echo [ERROR] Flash failed
@@ -133,14 +142,14 @@ if /i "%COMMAND%"=="flash" (
 if /i "%COMMAND%"=="monitor" (
     echo.
     echo [*] Starting serial monitor...
-    docker compose run --rm esp32 idf.py monitor
+    docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . $IDF_PATH/export.sh && idf.py monitor"
     goto :eof
 )
 
 if /i "%COMMAND%"=="test" (
     echo.
     echo [*] Running tests...
-    docker compose run --rm esp32 idf.py test
+    docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . $IDF_PATH/export.sh && idf.py test"
     if errorlevel 1 (
         echo.
         echo [ERROR] Tests failed
@@ -155,7 +164,7 @@ if /i "%COMMAND%"=="test" (
 if /i "%COMMAND%"=="clean" (
     echo.
     echo [*] Cleaning build artifacts...
-    docker compose run --rm esp32 idf.py clean
+    docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . $IDF_PATH/export.sh && idf.py fullclean"
     if errorlevel 1 (
         echo.
         echo [ERROR] Clean failed
@@ -170,7 +179,7 @@ if /i "%COMMAND%"=="clean" (
 if /i "%COMMAND%"=="erase" (
     echo.
     echo [*] Erasing flash memory...
-    docker compose run --rm esp32 idf.py erase_flash
+    docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . $IDF_PATH/export.sh && idf.py erase-flash"
     if errorlevel 1 (
         echo.
         echo [ERROR] Erase failed
@@ -184,26 +193,25 @@ if /i "%COMMAND%"=="erase" (
 
 if /i "%COMMAND%"=="full" (
     echo.
+    echo [*] Building Docker image...
+    docker compose build --no-cache
+    if errorlevel 1 (
+        echo.
+        echo [ERROR] Docker build failed
+        pause
+        exit /b 1
+    )
+    echo.
     echo [*] Building and flashing...
-    docker compose run --rm esp32 idf.py build
+    docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . $IDF_PATH/export.sh && idf.py build && idf.py flash"
     if errorlevel 1 (
         echo.
-        echo [ERROR] Build failed
+        echo [ERROR] Build or flash failed
         pause
         exit /b 1
     )
     echo.
-    echo [OK] Build successful
-    echo.
-    docker compose run --rm esp32 idf.py flash
-    if errorlevel 1 (
-        echo.
-        echo [ERROR] Flash failed
-        pause
-        exit /b 1
-    )
-    echo.
-    echo [OK] Flash successful
+    echo [OK] Build and flash successful
     goto :eof
 )
 
