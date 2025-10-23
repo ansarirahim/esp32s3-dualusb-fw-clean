@@ -6,4 +6,4 @@
     "filesystem.c"
     "led_control.c"
 INCLUDE_DIRS "."
-REQUIRES esp_tinyusb)
+REQUIRES esp_tinyusb usb)

@@ -1,2 +1,2 @@
-source C:/Users/Abdul/Documents/GitHub/Michael USB OTG/esp32s3-dualusb-fw/build/bootloader/gdbinit/symbols
-source C:/Users/Abdul/Documents/GitHub/Michael USB OTG/esp32s3-dualusb-fw/build/bootloader/gdbinit/connect
+source /project/build/bootloader/gdbinit/symbols
+source /project/build/bootloader/gdbinit/connect

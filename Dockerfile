@@ -7,7 +7,7 @@ FROM espressif/idf:v5.5.1
 WORKDIR /project
 
 # Set IDF_PATH explicitly (espressif/idf image location)
-ENV IDF_PATH=/opt/esp-idf
+ENV IDF_PATH=/opt/esp/idf
 
 # Install additional tools
 RUN apt-get update && apt-get install -y \
@@ -21,11 +21,11 @@ RUN apt-get update && apt-get install -y \
 COPY . .
 
 # Source ESP-IDF environment and set target
-RUN . $IDF_PATH/export.sh && idf.py set-target esp32s3
+RUN export IDF_PATH_FORCE=1 && . $IDF_PATH/export.sh && idf.py set-target esp32s3
 
 # Pre-download dependencies
-RUN . $IDF_PATH/export.sh && idf.py build --dry-run || true
+RUN export IDF_PATH_FORCE=1 && . $IDF_PATH/export.sh && idf.py build --dry-run || true
 
 # Default command - source environment on entry
-CMD ["/bin/bash", "-c", ". $IDF_PATH/export.sh && /bin/bash"]
+CMD ["/bin/bash", "-c", "export IDF_PATH_FORCE=1 && . $IDF_PATH/export.sh && /bin/bash"]
 

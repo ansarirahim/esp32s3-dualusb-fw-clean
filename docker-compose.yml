@@ -11,10 +11,9 @@ services:
       - /dev/ttyUSB0:/dev/ttyUSB0
       - /dev/ttyACM0:/dev/ttyACM0
     environment:
-      - IDF_PATH=/opt/esp-idf
+      - IDF_PATH=/opt/esp/idf
       - IDF_TARGET=esp32s3
     stdin_open: true
     tty: true
     privileged: true
-    entrypoint: /bin/bash -c ". $IDF_PATH/export.sh && exec /bin/bash"
 

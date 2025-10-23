@@ -1,0 +1,2 @@
+Command: cmake -G Ninja -DPYTHON_DEPS_CHECKED=1 -DPYTHON=/opt/esp/python_env/idf5.5_py3.12_env/bin/python -DESP_PLATFORM=1 -DCCACHE_ENABLE=1 /project
+/tmp/kconfgen_tmpfxzuh2ew:7: warning: '1' is not a valid value for the bool symbol FATFS_LFN_STACK (defined at /opt/esp/idf/components/fatfs/Kconfig:22). Assignment ignored.
