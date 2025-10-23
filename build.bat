@@ -10,6 +10,11 @@ REM Get the directory where this script is located
 set SCRIPT_DIR=%~dp0
 cd /d "%SCRIPT_DIR%"
 
+REM Add Docker to PATH if installed but not in PATH
+if exist "C:\Program Files\Docker\Docker\resources\bin\docker.exe" (
+    set "PATH=C:\Program Files\Docker\Docker\resources\bin;!PATH!"
+)
+
 echo.
 echo ============================================================================
 echo ESP32-S3 Dual USB Firmware - Build and Flash
