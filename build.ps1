@@ -4,7 +4,8 @@
 # ============================================================================
 
 param(
-    [string]$Command = ""
+    [string]$Command = "",
+    [string]$Port = ""
 )
 
 # Get the directory where this script is located
@@ -114,7 +115,12 @@ switch ($Command.ToLower()) {
     "flash" {
         Write-Host "[*] Flashing firmware..."
         Write-Host ""
-        & docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . `$IDF_PATH/export.sh && idf.py flash"
+        if ($Port) {
+            Write-Host "[*] Using port: $Port"
+            & docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . `$IDF_PATH/export.sh && idf.py -p $Port flash"
+        } else {
+            & docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . `$IDF_PATH/export.sh && idf.py flash"
+        }
         if ($LASTEXITCODE -ne 0) {
             Write-Host ""
             Write-Host "[ERROR] Flash failed"
@@ -172,7 +178,12 @@ switch ($Command.ToLower()) {
             Write-Host "[ERROR] Build failed"
             exit 1
         }
-        & docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . `$IDF_PATH/export.sh && idf.py build && idf.py flash"
+        if ($Port) {
+            Write-Host "[*] Using port: $Port"
+            & docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . `$IDF_PATH/export.sh && idf.py build && idf.py -p $Port flash"
+        } else {
+            & docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . `$IDF_PATH/export.sh && idf.py build && idf.py flash"
+        }
         if ($LASTEXITCODE -ne 0) {
             Write-Host ""
             Write-Host "[ERROR] Build or flash failed"

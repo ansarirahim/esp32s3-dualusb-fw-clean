@@ -229,6 +229,42 @@ docker --version
 
 WSL2 Docker works perfectly and is a great fallback if Docker Desktop has issues.
 
+### No Serial Ports Found During Flash
+**Error:** "No serial ports found. Connect a device, or use '-p PORT' option to set a specific port."
+
+**Solution 1 (Recommended - Auto-detect):**
+1. Connect ESP32-S3 board via USB cable
+2. Wait 2-3 seconds for device to be recognized
+3. Try flashing again: `build.bat flash` or `./build.sh flash`
+
+**Solution 2 (Manual port specification):**
+
+**Windows - Find COM Port:**
+1. Open Device Manager (Win+X → Device Manager)
+2. Look for "COM" port under "Ports (COM & LPT)"
+3. Note the port number (e.g., COM3, COM4)
+4. Flash with: `build.bat flash COM3`
+
+**Linux - Find Port:**
+```bash
+# List all serial ports
+ls /dev/tty*
+
+# Usually /dev/ttyUSB0 or /dev/ttyACM0
+# Flash with:
+./build.sh flash /dev/ttyUSB0
+```
+
+**Mac - Find Port:**
+```bash
+# List all serial ports
+ls /dev/tty.*
+
+# Usually /dev/tty.usbserial-* or /dev/tty.usbmodem*
+# Flash with:
+./build.sh flash /dev/tty.usbserial-1234
+```
+
 ### Device Not Found During Flash
 **Error:** "Could not find device"
 
@@ -237,6 +273,7 @@ WSL2 Docker works perfectly and is a great fallback if Docker Desktop has issues
 2. Verify device appears in Device Manager (Windows) or `ls /dev/tty*` (Linux/Mac)
 3. Try different USB port
 4. Restart Docker Desktop
+5. Manually specify port: `build.bat flash COM3` (Windows) or `./build.sh flash /dev/ttyUSB0` (Linux/Mac)
 
 ### Build Fails with "Permission Denied"
 **Error:** "Permission denied" on Linux

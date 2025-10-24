@@ -122,10 +122,39 @@ Device should reboot and show output on serial monitor.
 
 ---
 
+## Specifying Serial Port (If Auto-Detection Fails)
+
+If you get "No serial ports found" error during flash, you can manually specify the port:
+
+### Windows (PowerShell)
+```powershell
+# Find your COM port in Device Manager, then:
+.\build.ps1 flash COM3
+.\build.ps1 full COM3
+```
+
+### Windows (Command Prompt)
+```cmd
+REM Find your COM port in Device Manager, then:
+build.bat flash COM3
+build.bat full COM3
+```
+
+### Linux/Mac
+```bash
+# Find your port with: ls /dev/tty*
+# Then use:
+./build.sh flash /dev/ttyUSB0
+./build.sh full /dev/ttyUSB0
+```
+
+---
+
 ## Common Issues
 
 | Issue | Solution |
 |-------|----------|
+| "No serial ports found" during flash | Connect USB cable, or specify port manually: `build.bat flash COM3` (Windows) or `./build.sh flash /dev/ttyUSB0` (Linux/Mac) |
 | "running scripts is disabled" (PowerShell) | Use `build.bat build` or `powershell -ExecutionPolicy Bypass -File .\build.ps1 build` |
 | Docker not found | Install Docker Desktop from https://www.docker.com/products/docker-desktop |
 | Docker Desktop won't start (Windows) | Use WSL2 instead: `wsl -d Ubuntu` then `./build.sh build` |

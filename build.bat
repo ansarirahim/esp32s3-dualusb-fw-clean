@@ -25,6 +25,7 @@ echo.
 
 REM Parse command line arguments FIRST (before Docker check)
 set COMMAND=%1
+set PORT=%2
 
 REM Allow help without Docker
 if /i "%COMMAND%"=="help" (
@@ -127,7 +128,12 @@ if /i "%COMMAND%"=="build" (
 if /i "%COMMAND%"=="flash" (
     echo.
     echo [*] Flashing firmware...
-    docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . $IDF_PATH/export.sh && idf.py flash"
+    if not "%PORT%"=="" (
+        echo [*] Using port: %PORT%
+        docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . $IDF_PATH/export.sh && idf.py -p %PORT% flash"
+    ) else (
+        docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . $IDF_PATH/export.sh && idf.py flash"
+    )
     if errorlevel 1 (
         echo.
         echo [ERROR] Flash failed
@@ -203,7 +209,12 @@ if /i "%COMMAND%"=="full" (
     )
     echo.
     echo [*] Building and flashing...
-    docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . $IDF_PATH/export.sh && idf.py build && idf.py flash"
+    if not "%PORT%"=="" (
+        echo [*] Using port: %PORT%
+        docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . $IDF_PATH/export.sh && idf.py build && idf.py -p %PORT% flash"
+    ) else (
+        docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . $IDF_PATH/export.sh && idf.py build && idf.py flash"
+    )
     if errorlevel 1 (
         echo.
         echo [ERROR] Build or flash failed

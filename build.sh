@@ -23,6 +23,7 @@ echo ""
 
 # Parse command line arguments FIRST (before Docker check)
 COMMAND="$1"
+PORT="$2"
 
 # Allow help without Docker
 if [ "$COMMAND" = "help" ]; then
@@ -120,7 +121,12 @@ case "$COMMAND" in
         ;;
     flash)
         echo -e "${YELLOW}Flashing firmware...${RESET}"
-        docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . \$IDF_PATH/export.sh && idf.py flash"
+        if [ -n "$PORT" ]; then
+            echo -e "${YELLOW}Using port: $PORT${RESET}"
+            docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . \$IDF_PATH/export.sh && idf.py -p $PORT flash"
+        else
+            docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . \$IDF_PATH/export.sh && idf.py flash"
+        fi
         if [ $? -ne 0 ]; then
             echo -e "${RED}Flash failed${RESET}"
             exit 1
@@ -166,7 +172,12 @@ case "$COMMAND" in
             exit 1
         fi
         echo -e "${YELLOW}Building and flashing...${RESET}"
-        docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . \$IDF_PATH/export.sh && idf.py build && idf.py flash"
+        if [ -n "$PORT" ]; then
+            echo -e "${YELLOW}Using port: $PORT${RESET}"
+            docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . \$IDF_PATH/export.sh && idf.py build && idf.py -p $PORT flash"
+        else
+            docker compose run --rm esp32 bash -c "export IDF_PATH_FORCE=1 && . \$IDF_PATH/export.sh && idf.py build && idf.py flash"
+        fi
         if [ $? -ne 0 ]; then
             echo -e "${RED}Build or flash failed${RESET}"
             exit 1
