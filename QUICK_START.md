@@ -12,20 +12,34 @@
 git clone https://github.com/ansarirahim/esp32s3-dualusb-fw-clean.git
 cd esp32s3-dualusb-fw-clean
 
-# 3. Build firmware (first time: ~10 min, next times: ~2 min)
+# 3. (Optional) Pre-pull Docker image to speed up first build
+docker pull espressif/idf:v5.5.1
+
+# 4. Build firmware (first time: ~10 min, next times: ~2 min)
 .\build.ps1 build
 
-# 4. Flash to device (connect ESP32-S3 first)
+# 5. Flash to device (connect ESP32-S3 first)
 .\build.ps1 flash
 
 # Done! ✅
 ```
 
-### Windows Users (Command Prompt)
+### Windows Users (Command Prompt - No PowerShell Policy Issues)
 ```cmd
 REM Same as above, but use:
 build.bat build
 build.bat flash
+```
+
+### Windows Users (PowerShell with Execution Policy Fix)
+```powershell
+# If you get "running scripts is disabled" error, use:
+powershell -ExecutionPolicy Bypass -File .\build.ps1 build
+powershell -ExecutionPolicy Bypass -File .\build.ps1 flash
+
+# Or permanently allow for this session:
+Set-ExecutionPolicy -Scope Process Bypass
+.\build.ps1 build
 ```
 
 ### Linux/Mac Users
@@ -38,14 +52,27 @@ build.bat flash
 git clone https://github.com/ansarirahim/esp32s3-dualusb-fw-clean.git
 cd esp32s3-dualusb-fw-clean
 
-# 3. Build firmware
+# 3. (Optional) Pre-pull Docker image to speed up first build
+docker pull espressif/idf:v5.5.1
+
+# 4. Build firmware
 chmod +x build.sh
 ./build.sh build
 
-# 4. Flash to device
+# 5. Flash to device
 ./build.sh flash
 
 # Done! ✅
+```
+
+### Linux/Mac Users (WSL2 Fallback - If Docker Desktop Won't Start)
+```bash
+# If Docker Desktop misbehaves on Windows, use WSL2:
+wsl --install  # if needed
+wsl -d Ubuntu
+# Inside WSL Ubuntu terminal:
+docker --version
+./build.sh build
 ```
 
 ---
@@ -99,10 +126,13 @@ Device should reboot and show output on serial monitor.
 
 | Issue | Solution |
 |-------|----------|
-| Docker not found | Install Docker Desktop |
-| Device not found | Connect USB cable, check Device Manager |
-| Build fails | Ensure Docker is running, check internet |
+| "running scripts is disabled" (PowerShell) | Use `build.bat build` or `powershell -ExecutionPolicy Bypass -File .\build.ps1 build` |
+| Docker not found | Install Docker Desktop from https://www.docker.com/products/docker-desktop |
+| Docker Desktop won't start (Windows) | Use WSL2 instead: `wsl -d Ubuntu` then `./build.sh build` |
+| Device not found | Connect USB cable, check Device Manager (Windows) or `ls /dev/tty*` (Linux/Mac) |
+| Build fails | Ensure Docker is running, check internet connection |
 | Permission denied (Linux) | `sudo usermod -aG docker $USER` then log out/in |
+| First build is slow | This is normal (~10 min). Subsequent builds are ~2 min. Optional: pre-pull with `docker pull espressif/idf:v5.5.1` |
 
 ---
 

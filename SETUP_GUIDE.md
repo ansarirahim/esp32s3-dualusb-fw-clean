@@ -88,6 +88,17 @@ git clone https://github.com/ansarirahim/esp32s3-dualusb-fw-clean.git
 cd esp32s3-dualusb-fw-clean
 ```
 
+### Step 2.5: (Optional) Pre-Pull Docker Image
+
+This speeds up the first build by downloading the Docker image in advance:
+
+```bash
+# Pre-pull the official Espressif toolchain image
+docker pull espressif/idf:v5.5.1
+```
+
+This is optional but recommended. The image is ~4GB and will be downloaded automatically on first build if you skip this step.
+
 ### Step 3: Connect ESP32-S3 Board
 
 1. Connect ESP32-S3 board to your computer via USB cable
@@ -170,6 +181,27 @@ build.bat build
 
 ## Troubleshooting
 
+### PowerShell Execution Policy Error (Windows)
+**Error:** "running scripts is disabled on this system"
+
+**Solution 1 (Recommended - No system changes):**
+```powershell
+powershell -ExecutionPolicy Bypass -File .\build.ps1 build
+powershell -ExecutionPolicy Bypass -File .\build.ps1 flash
+```
+
+**Solution 2 (Temporary - Current session only):**
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass
+.\build.ps1 build
+```
+
+**Solution 3 (Use Command Prompt instead):**
+```cmd
+build.bat build
+build.bat flash
+```
+
 ### Docker Not Found
 **Error:** "Docker is not installed or not in PATH"
 
@@ -177,6 +209,25 @@ build.bat build
 1. Install Docker Desktop from https://www.docker.com/products/docker-desktop
 2. Restart your computer
 3. Try again
+
+### Docker Desktop Won't Start (Windows)
+**Error:** Docker Desktop fails to start or hangs
+
+**Solution (Use WSL2 instead):**
+```bash
+# Install WSL2 if needed
+wsl --install
+
+# Open Ubuntu terminal
+wsl -d Ubuntu
+
+# Inside WSL Ubuntu, run:
+docker --version
+./build.sh build
+./build.sh flash
+```
+
+WSL2 Docker works perfectly and is a great fallback if Docker Desktop has issues.
 
 ### Device Not Found During Flash
 **Error:** "Could not find device"
