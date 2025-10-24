@@ -122,31 +122,32 @@ Device should reboot and show output on serial monitor.
 
 ---
 
-## Specifying Serial Port (If Auto-Detection Fails)
+## Advanced: Specifying Serial Port Manually
 
-If you get "No serial ports found" error during flash, you can manually specify the port:
+For advanced users or when working with multiple devices, you can explicitly specify the serial port:
 
 ### Windows (PowerShell)
 ```powershell
-# Find your COM port in Device Manager, then:
+# Specify COM port explicitly
 .\build.ps1 flash COM3
 .\build.ps1 full COM3
 ```
 
 ### Windows (Command Prompt)
 ```cmd
-REM Find your COM port in Device Manager, then:
+REM Specify COM port explicitly
 build.bat flash COM3
 build.bat full COM3
 ```
 
 ### Linux/Mac
 ```bash
-# Find your port with: ls /dev/tty*
-# Then use:
+# Specify port explicitly
 ./build.sh flash /dev/ttyUSB0
 ./build.sh full /dev/ttyUSB0
 ```
+
+**Note:** Port specification is optional. The scripts will auto-detect if not specified.
 
 ---
 
@@ -154,7 +155,7 @@ build.bat full COM3
 
 | Issue | Solution |
 |-------|----------|
-| "No serial ports found" during flash | Connect USB cable, or specify port manually: `build.bat flash COM3` (Windows) or `./build.sh flash /dev/ttyUSB0` (Linux/Mac) |
+| "No serial ports found" during flash | Connect USB cable and wait 2-3 seconds. Or specify port explicitly: `build.bat flash COM3` (Windows) or `./build.sh flash /dev/ttyUSB0` (Linux/Mac) |
 | "running scripts is disabled" (PowerShell) | Use `build.bat build` or `powershell -ExecutionPolicy Bypass -File .\build.ps1 build` |
 | Docker not found | Install Docker Desktop from https://www.docker.com/products/docker-desktop |
 | Docker Desktop won't start (Windows) | Use WSL2 instead: `wsl -d Ubuntu` then `./build.sh build` |
