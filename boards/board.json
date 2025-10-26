@@ -1,0 +1,23 @@
+{
+  "name": "esp32s3-devkitc-1",
+  "description": "ESP32-S3 DevKitC-1 with Dual USB Support",
+  "mcu": "esp32s3",
+  "variant": "N16R8",
+  "flash_size_mb": 16,
+  "psram_size_mb": 8,
+  "usb_phy": "native",
+  "features": {
+    "usb_device": true,
+    "usb_host": true,
+    "rmt": true,
+    "fatfs": true
+  },
+  "pins": {
+    "usb_dp": 20,
+    "usb_dm": 19,
+    "led_red": 6,
+    "ws2812_din": 38,
+    "boot": 0
+  }
+}
+

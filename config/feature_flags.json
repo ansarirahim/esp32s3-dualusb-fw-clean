@@ -1,0 +1,75 @@
+{
+  "schema": {
+    "feature_usb_otg": {
+      "type": "enum",
+      "values": ["on", "off"],
+      "description": "Enable USB OTG (Device + Host) support"
+    },
+    "use_rmt": {
+      "type": "enum",
+      "values": ["on", "off"],
+      "description": "Enable RMT peripheral for WS2812 LED control"
+    },
+    "ws2812_driver": {
+      "type": "enum",
+      "values": ["rmt", "pio", "bitbang"],
+      "description": "WS2812 LED driver implementation"
+    },
+    "psram": {
+      "type": "enum",
+      "values": ["on", "off", "optional"],
+      "description": "PSRAM support (optional = use if available)"
+    },
+    "pinmap_profile": {
+      "type": "enum",
+      "values": ["default", "board_specific"],
+      "description": "Pin mapping profile"
+    }
+  },
+  "mcu_defaults": {
+    "esp32s3": {
+      "feature_usb_otg": "on",
+      "use_rmt": "on",
+      "ws2812_driver": "rmt",
+      "psram": "on",
+      "pinmap_profile": "default"
+    },
+    "esp32s2": {
+      "feature_usb_otg": "on",
+      "use_rmt": "off",
+      "ws2812_driver": "bitbang",
+      "psram": "off",
+      "pinmap_profile": "default"
+    },
+    "esp32c3": {
+      "feature_usb_otg": "off",
+      "use_rmt": "on",
+      "ws2812_driver": "rmt",
+      "psram": "off",
+      "pinmap_profile": "default"
+    },
+    "esp32": {
+      "feature_usb_otg": "off",
+      "use_rmt": "on",
+      "ws2812_driver": "rmt",
+      "psram": "optional",
+      "pinmap_profile": "default"
+    }
+  },
+  "sdkconfig_mapping": {
+    "feature_usb_otg": {
+      "on": ["CONFIG_USB_DEVICE_STACK=y", "CONFIG_TINYUSB_MSC_ENABLED=y"],
+      "off": ["CONFIG_USB_DEVICE_STACK=n"]
+    },
+    "use_rmt": {
+      "on": ["CONFIG_RMT_ENABLED=y"],
+      "off": ["CONFIG_RMT_ENABLED=n"]
+    },
+    "psram": {
+      "on": ["CONFIG_ESP32S3_SPIRAM=y"],
+      "off": ["CONFIG_ESP32S3_SPIRAM=n"],
+      "optional": ["CONFIG_ESP32S3_SPIRAM=y"]
+    }
+  }
+}
+

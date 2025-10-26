@@ -1,0 +1,75 @@
+{
+  "esp32s3-devkitc-1": {
+    "mcu": "esp32s3",
+    "description": "ESP32-S3 DevKitC-1 (N16R8)",
+    "usb_phy": "native",
+    "pins": {
+      "USB_DP": 20,
+      "USB_DM": 19,
+      "LED_R": 6,
+      "WS2812_DIN": 38,
+      "BOOT": 0
+    },
+    "features": {
+      "usb_device": true,
+      "usb_host": true,
+      "rmt": true,
+      "psram": true,
+      "fatfs": true
+    }
+  },
+  "esp32s2-saola-1": {
+    "mcu": "esp32s2",
+    "description": "ESP32-S2 Saola-1",
+    "usb_phy": "native",
+    "pins": {
+      "USB_DP": 20,
+      "USB_DM": 19,
+      "LED_R": 18,
+      "WS2812_DIN": 33,
+      "BOOT": 0
+    },
+    "features": {
+      "usb_device": true,
+      "usb_host": false,
+      "rmt": false,
+      "psram": false,
+      "fatfs": true
+    }
+  },
+  "esp32c3-devkitm-1": {
+    "mcu": "esp32c3",
+    "description": "ESP32-C3 DevKitM-1",
+    "usb_phy": "external",
+    "pins": {
+      "LED_R": 2,
+      "WS2812_DIN": 7,
+      "BOOT": 9
+    },
+    "features": {
+      "usb_device": false,
+      "usb_host": false,
+      "rmt": true,
+      "psram": false,
+      "fatfs": true
+    }
+  },
+  "esp32-wrover-kit": {
+    "mcu": "esp32",
+    "description": "ESP32 WROVER Kit",
+    "usb_phy": "external",
+    "pins": {
+      "LED_R": 0,
+      "WS2812_DIN": 4,
+      "BOOT": 0
+    },
+    "features": {
+      "usb_device": false,
+      "usb_host": false,
+      "rmt": true,
+      "psram": true,
+      "fatfs": true
+    }
+  }
+}
+

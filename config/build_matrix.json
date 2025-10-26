@@ -1,0 +1,54 @@
+{
+  "matrix": [
+    {
+      "id": "s3-release",
+      "mcu": "esp32s3",
+      "board": "esp32s3-devkitc-1",
+      "profile": "release",
+      "enabled": true,
+      "description": "ESP32-S3 DevKitC-1 Release Build"
+    },
+    {
+      "id": "s2-release",
+      "mcu": "esp32s2",
+      "board": "esp32s2-saola-1",
+      "profile": "release",
+      "enabled": true,
+      "description": "ESP32-S2 Saola-1 Release Build"
+    },
+    {
+      "id": "c3-release",
+      "mcu": "esp32c3",
+      "board": "esp32c3-devkitm-1",
+      "profile": "release",
+      "enabled": true,
+      "description": "ESP32-C3 DevKitM-1 Release Build"
+    },
+    {
+      "id": "esp32-release",
+      "mcu": "esp32",
+      "board": "esp32-wrover-kit",
+      "profile": "release",
+      "enabled": false,
+      "description": "ESP32 WROVER Kit Release Build (legacy, on-demand only)"
+    }
+  ],
+  "profiles": {
+    "release": {
+      "optimization": "O2",
+      "debug_symbols": false,
+      "lto": true,
+      "description": "Optimized release build"
+    },
+    "debug": {
+      "optimization": "O0",
+      "debug_symbols": true,
+      "lto": false,
+      "description": "Debug build with symbols"
+    }
+  },
+  "sdk_versions": {
+    "esp-idf": "5.2.1"
+  }
+}
+
