@@ -19,8 +19,10 @@
 #include "ff.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
+#include "esp_partition.h"
 #include <time.h>
 #include <sys/stat.h>
+#include <assert.h>
 
 static const char *TAG = "fs";
 
@@ -53,6 +55,16 @@ static void fs_unlock(void) {
 
 bool fs_init_internal(void) {
     ESP_LOGI(TAG, "Initializing internal FATFS at %s", MOUNT_POINT);
+
+    /* Precheck: Verify 'storage' partition exists before mount */
+    const esp_partition_t *storage_part = esp_partition_find_first(
+        ESP_PARTITION_TYPE_DATA,
+        ESP_PARTITION_SUBTYPE_DATA_FAT,
+        "storage"
+    );
+    assert(storage_part && "storage partition missing — flash partition table");
+    ESP_LOGI(TAG, "WL handle acquired for 'storage' partition (offset=0x%x, size=0x%x)",
+             storage_part->address, storage_part->size);
 
     /* Create mutex for FS access */
     if (!g_fs_mutex) {
