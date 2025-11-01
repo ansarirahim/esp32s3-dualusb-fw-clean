@@ -39,10 +39,14 @@
 #include "freertos/task.h"
 #include "esp_log.h"
 #include "led_control.h"
+#include "led_autoprobe.h"
 #include "filesystem.h"
 #include "usb_device.h"
 #include "usb_host.h"
 #include "usb_mode.h"
+
+/* External USB descriptors initialization function */
+extern void usb_descriptors_init(void);
 
 static const char *TAG = "app";  /**< Log tag for application messages */
 
@@ -67,17 +71,24 @@ static const char *TAG = "app";  /**< Log tag for application messages */
  * @see usb_device_init()
  */
 void app_main(void) {
-    ESP_LOGI(TAG, "ESP32-S3 Dual USB FW boot");
+    ESP_LOGI(TAG, "ESP32-S3 Dual USB FW boot - vPT-A4.2");
 
-    /* Initialize LED */
+    /* Initialize USB descriptors (custom VID/PID and strings) */
+    usb_descriptors_init();
+
+    /* Initialize LED autoprobe (disabled - using fixed GPIO 6) */
+    led_autoprobe_init();
+    ESP_LOGI(TAG, "LED GPIO fixed to 6");
+    vTaskDelay(pdMS_TO_TICKS(500));  /* Brief delay for initialization */
+
+    /* Initialize LED control */
     led_init();
     led_set_state(LED_STATE_IDLE);
 
-    /* Initialize internal FATFS */
+    /* Initialize internal FATFS (non-blocking - continue even if fails) */
     if (!fs_init_internal()) {
-        ESP_LOGE(TAG, "Failed to initialize filesystem");
-        led_set_state(LED_STATE_ERROR);
-        return;
+        ESP_LOGW(TAG, "Failed to initialize filesystem - continuing without storage");
+        /* Don't return - continue with USB initialization */
     }
 
     /* Initialize USB Device Mode (MSC) */

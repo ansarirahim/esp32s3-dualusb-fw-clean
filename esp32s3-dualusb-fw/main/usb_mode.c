@@ -128,7 +128,7 @@ bool usb_mode_init(void) {
     }
     
     // Create mode control task
-    if (xTaskCreate(usb_mode_task, "usb_mode", 2048, NULL, 3, &g_usb_mode_ctx.mode_task) != pdPASS) {
+    if (xTaskCreate(usb_mode_task, "usb_mode", 4096, NULL, 3, &g_usb_mode_ctx.mode_task) != pdPASS) {
         ESP_LOGE(TAG, "Failed to create USB Mode task");
         vSemaphoreDelete(g_usb_mode_ctx.state_mutex);
         vSemaphoreDelete(g_usb_mode_ctx.ready_semaphore);

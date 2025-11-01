@@ -229,3 +229,7 @@ bool fs_remount(void) {
     ESP_LOGI(TAG, "FATFS remounted");
     return true;
 }
+
+wl_handle_t fs_get_wl_handle(void) {
+    return g_wl_handle;
+}

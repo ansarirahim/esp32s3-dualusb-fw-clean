@@ -5,5 +5,6 @@
     "usb_mode.c"
     "filesystem.c"
     "led_control.c"
+    "led_autoprobe.c"
 INCLUDE_DIRS "."
-REQUIRES esp_tinyusb)
+REQUIRES esp_tinyusb usb)

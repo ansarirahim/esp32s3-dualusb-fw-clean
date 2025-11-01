@@ -60,6 +60,7 @@ static uint32_t g_io_activity_timeout = 0;  /**< I/O activity timeout counter */
  */
 static SemaphoreHandle_t g_io_semaphore = NULL;  /**< Semaphore for I/O activity synchronization */
 static TaskHandle_t g_io_monitor_task = NULL;    /**< Task handle for I/O activity monitor */
+static tinyusb_msc_storage_handle_t g_msc_storage_handle = NULL;  /**< MSC storage handle */
 /** @} */
 
 /**
@@ -278,6 +279,11 @@ bool usb_device_init(void) {
             .skip_setup = false,
             .self_powered = false,
         },
+        .task = {
+            .size = 4096,
+            .priority = 5,
+            .xCoreID = 0,
+        },
     };
 
     esp_err_t ret = tinyusb_driver_install(&tusb_cfg);
@@ -301,9 +307,9 @@ bool usb_device_init(void) {
         return false;
     }
 
-    /* Create MSC storage with SPI Flash */
+    /* Create MSC storage with SPI Flash - using internal FATFS mount point */
     tinyusb_msc_storage_config_t msc_cfg = {
-        .medium.wl_handle = WL_INVALID_HANDLE,  // Will be initialized by filesystem
+        .medium.wl_handle = fs_get_wl_handle(),  /* Get WL handle from filesystem */
         .fat_fs = {
             .base_path = MOUNT_POINT,
             .config = {
@@ -317,12 +323,17 @@ bool usb_device_init(void) {
         .mount_point = TINYUSB_MSC_STORAGE_MOUNT_USB,
     };
 
-    // Note: In the new API, storage initialization is handled differently
-    // The storage is created and managed through the new API
-    // For now, we'll skip the explicit storage creation as it's handled by the driver
+    ret = tinyusb_msc_new_storage_spiflash(&msc_cfg, &g_msc_storage_handle);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to initialize MSC storage: %s", esp_err_to_name(ret));
+        return false;
+    }
+
+    ESP_LOGI(TAG, "MSC storage initialized successfully");
+    ESP_LOGI(TAG, "USB Device (MSC) initialized");
 
     g_usb_connected = true;
-    ESP_LOGI(TAG, "USB Device (MSC) initialized");
+    g_usb_mounted = true;
     return true;
 }
 

@@ -1,0 +1,7 @@
+# ESP32-S3 Dual USB Firmware - 8MB Flash Partition Table
+# Name,Type,SubType,Offset,Size,Flags
+nvs,data,nvs,0x9000,24K
+phy_init,data,phy,0xF000,4K
+factory,app,factory,0x10000,0x200000
+storage,data,fat,0x210000,0x400000
+

@@ -7,6 +7,10 @@
 #include "usb_descriptors.h"
 #include "sdkconfig.h"
 #include "tinyusb.h"
+#include "esp_mac.h"
+#include "esp_log.h"
+
+static const char *TAG = "usb_desc_custom";
 
 /*
  * A combination of interfaces must have a unique product id, since PC will save device driver after the first plug.
@@ -41,17 +45,9 @@ const tusb_desc_device_t descriptor_dev_default = {
 
     .bMaxPacketSize0 = CFG_TUD_ENDPOINT0_SIZE,
 
-#if CONFIG_TINYUSB_DESC_USE_ESPRESSIF_VID
-    .idVendor = TINYUSB_ESPRESSIF_VID,
-#else
-    .idVendor = CONFIG_TINYUSB_DESC_CUSTOM_VID,
-#endif
-
-#if CONFIG_TINYUSB_DESC_USE_DEFAULT_PID
-    .idProduct = USB_TUSB_PID,
-#else
-    .idProduct = CONFIG_TINYUSB_DESC_CUSTOM_PID,
-#endif
+    /* Custom VID/PID for MYCO DualUSB MSC */
+    .idVendor = 0x303A,   /* MYCO Vendor ID */
+    .idProduct = 0x4010,  /* DualUSB MSC Product ID */
 
     .bcdDevice = CONFIG_TINYUSB_DESC_BCD_DEVICE,
 
@@ -90,9 +86,9 @@ const tusb_desc_device_qualifier_t descriptor_qualifier_default = {
 const char *descriptor_str_default[] = {
     // array of pointer to string descriptors
     (char[]){0x09, 0x04},                // 0: is supported language is English (0x0409)
-    CONFIG_TINYUSB_DESC_MANUFACTURER_STRING, // 1: Manufacturer
-    CONFIG_TINYUSB_DESC_PRODUCT_STRING,      // 2: Product
-    CONFIG_TINYUSB_DESC_SERIAL_STRING,       // 3: Serials, should use chip ID
+    "MYCO",                              // 1: Manufacturer (Custom)
+    "DualUSB MSC",                       // 2: Product (Custom)
+    CONFIG_TINYUSB_DESC_SERIAL_STRING,   // 3: Serials, should use chip ID
 
 #if CONFIG_TINYUSB_CDC_ENABLED
     CONFIG_TINYUSB_DESC_CDC_STRING,          // 4: CDC Interface
@@ -289,3 +285,13 @@ uint8_t tusb_get_mac_string_id(void)
 }
 #endif
 /* End of Kconfig driven Descriptor */
+
+/**
+ * @brief Initialize USB descriptors with custom VID/PID and strings
+ */
+void usb_descriptors_init(void)
+{
+    ESP_LOGI(TAG, "USB Descriptors initialized");
+    ESP_LOGI(TAG, "VID: 0x%04X, PID: 0x%04X", descriptor_dev_default.idVendor, descriptor_dev_default.idProduct);
+    ESP_LOGI(TAG, "Manufacturer: MYCO, Product: DualUSB MSC");
+}

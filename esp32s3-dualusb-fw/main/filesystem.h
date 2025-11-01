@@ -50,6 +50,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include "wear_levelling.h"
 
 /** @defgroup filesystem_config Filesystem Configuration
  * @{
@@ -160,5 +161,17 @@ bool fs_unmount(void);
  * @see fs_unmount()
  */
 bool fs_remount(void);
+
+/**
+ * @brief Get Wear Levelling Handle
+ *
+ * Returns the wear levelling handle for the mounted filesystem.
+ * Used by USB MSC driver to access the underlying storage.
+ *
+ * @return Wear levelling handle (WL_INVALID_HANDLE if not mounted)
+ *
+ * @note Returns WL_INVALID_HANDLE if filesystem not initialized
+ */
+wl_handle_t fs_get_wl_handle(void);
 
 #endif /* FILESYSTEM_H */
